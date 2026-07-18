@@ -17,7 +17,7 @@
     --muted: light-dark(oklch(50% 0.02 200), oklch(68% 0.015 200));
     --accent: oklch(55% 0.19 262);
     --ok: oklch(60% 0.15 155);
-    --warn: oklch(65% 0.15 70);
+    --warn: light-dark(oklch(55% 0.12 70), oklch(72% 0.12 75));
     --radius: 14px;
   }
   * { box-sizing: border-box; }
@@ -150,6 +150,7 @@
 
       & .n { color: var(--muted); font-size: 11px; min-width: 2.2em; }
       & .phase { margin-left: auto; font-size: 11px; color: var(--muted); }
+      & .phase.key { color: var(--warn); font-weight: 650; }
       &:hover { background: color-mix(in oklch, var(--accent), transparent 92%); }
       &[aria-current="step"] {
         background: color-mix(in oklch, var(--accent), transparent 85%);
@@ -383,7 +384,8 @@ function stepRow(step, index) {
   row.innerHTML = `<span class="n">${index + 1}</span>
     #${step.pieceId} ${ARROWS[step.direction]} ${
       step.result === "EXIT" ? "离场" : `${step.distance} 格`}
-    <span class="phase">${step.phase === "coarse" ? "直出" : "关键"}</span>`;
+    <span class="phase${step.phase === "coarse" ? "" : " key"}">${
+      step.phase === "coarse" ? "直出" : "关键"}</span>`;
   row.addEventListener("click", () => showStep(index));
   return row;
 }
