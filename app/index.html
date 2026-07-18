@@ -1,474 +1,786 @@
 <!doctype html>
 <html lang="zh-CN">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>套住那只羊 · 求解器</title>
-  <link rel="stylesheet" href="css/desktop.css">
-  <link rel="stylesheet" href="css/shared.css">
-  <link rel="stylesheet" href="css/mobile.css">
-</head>
-<body>
-  <header class="topbar">
-    <div class="app-identity">
-      <span class="app-symbol" aria-hidden="true"><i></i></span>
-      <div class="app-copy">
-        <h1>套住那只羊</h1>
-        <span>智能棋盘工作台</span>
-      </div>
-    </div>
-    <nav class="mode-switch" aria-label="应用模式">
-      <button type="button" data-app-mode="operator" aria-pressed="true">桌面操作</button>
-      <button type="button" data-app-mode="reference" aria-pressed="false">移动参考</button>
-    </nav>
-    <div class="target-tools">
-      <label class="field compact">
-        <span>窗口</span>
-        <select id="targetSelect" aria-label="游戏窗口"></select>
-      </label>
-      <button id="refreshTargets" class="compact-button" title="刷新窗口列表">刷新</button>
-      <span id="runtimePill" class="runtime-pill idle"><b>空闲</b></span>
-    </div>
-  </header>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>套住那只羊 · 求解器</title>
+		<link rel="stylesheet" href="css/desktop.css" />
+		<link rel="stylesheet" href="css/shared.css" />
+		<link rel="stylesheet" href="css/mobile.css" />
+	</head>
+	<body>
+		<header class="topbar">
+			<div class="app-identity">
+				<span class="app-symbol" aria-hidden="true"><i></i></span>
+				<div class="app-copy">
+					<h1>套住那只羊</h1>
+					<span>棋盘求解器</span>
+				</div>
+			</div>
+			<nav class="mode-switch" aria-label="应用模式">
+				<button type="button" data-app-mode="operator" aria-pressed="true">桌面</button>
+				<button type="button" data-app-mode="reference" aria-pressed="false">移动</button>
+			</nav>
+			<div class="target-tools">
+				<label class="field compact">
+					<span>窗口</span>
+					<select id="targetSelect" aria-label="游戏窗口"></select>
+				</label>
+				<button id="refreshTargets" class="compact-button" title="刷新窗口列表">刷新</button>
+				<span id="runtimePill" class="runtime-pill idle"><b>空闲</b></span>
+			</div>
+		</header>
 
-  <main class="shell">
-    <aside class="workflow panel">
-      <header class="section-heading">
-        <div><span class="eyebrow">工作流</span><h2 class="section-title">开始操作</h2></div>
-        <span class="section-index" aria-hidden="true">01</span>
-      </header>
+		<main class="shell">
+			<aside class="workflow panel">
+				<header class="section-heading">
+					<div>
+						<span class="eyebrow">工作流</span>
+						<h2 class="section-title">开始操作</h2>
+					</div>
+					<span class="section-index" aria-hidden="true">01</span>
+				</header>
 
-      <div class="workflow-actions">
-        <button class="workflow-button primary" data-action="analyze" title="截图游戏窗口并识别当前棋盘">
-          <span class="workflow-icon" aria-hidden="true">⌁</span>
-          <span class="workflow-copy"><b>采集分析</b><small>截图并识别当前棋盘</small></span>
-        </button>
-        <button class="workflow-button" data-action="solve" title="根据当前棋盘生成解题计划">
-          <span class="workflow-icon" aria-hidden="true">◇</span>
-          <span class="workflow-copy"><b>生成解法</b><small>计算完整安全路径</small></span>
-        </button>
-        <button class="workflow-button execute" data-action="quick" title="复用当前棋盘，并清理最多三层可直接离场的普通羊">
-          <span class="workflow-icon" aria-hidden="true">↗</span>
-          <span class="workflow-copy"><b>快速解法</b><small>清理三层安全步骤</small></span>
-        </button>
-        <button class="workflow-button auto" data-action="auto" title="连续逐步执行，每步都会验证，可随时暂停">
-          <span class="workflow-icon" aria-hidden="true">▶</span>
-          <span class="workflow-copy"><b>连续执行</b><small>逐步验证并自动推进</small></span>
-        </button>
-      </div>
+				<div class="workflow-actions">
+					<button class="workflow-button primary" data-action="analyze" title="截图游戏窗口并识别当前棋盘">
+						<span class="workflow-icon" aria-hidden="true">⌁</span>
+						<span class="workflow-copy">
+							<b>采集分析</b>
+							<small>截图并识别当前棋盘</small>
+						</span>
+					</button>
+					<button class="workflow-button" data-action="solve" title="根据当前棋盘生成解题计划">
+						<span class="workflow-icon" aria-hidden="true">◇</span>
+						<span class="workflow-copy">
+							<b>生成解法</b>
+							<small>计算完整安全路径</small>
+						</span>
+					</button>
+					<button class="workflow-button execute" data-action="quick" title="复用当前棋盘，并清理最多三层可直接离场的普通羊">
+						<span class="workflow-icon" aria-hidden="true">↗</span>
+						<span class="workflow-copy">
+							<b>快速解法</b>
+							<small>快速清理可直出棋子</small>
+						</span>
+					</button>
+					<button class="workflow-button auto" data-action="auto" title="连续逐步执行，每步都会验证，可随时暂停">
+						<span class="workflow-icon" aria-hidden="true">▶</span>
+						<span class="workflow-copy">
+							<b>连续执行</b>
+							<small>逐步验证并自动推进</small>
+						</span>
+					</button>
+				</div>
 
-      <button id="pauseButton" class="pause-button" disabled><span aria-hidden="true">Ⅱ</span>暂停执行</button>
+				<button id="pauseButton" class="pause-button" disabled>
+					<span aria-hidden="true">Ⅱ</span>
+					暂停执行
+				</button>
 
-      <section class="workflow-summary" aria-live="polite">
-        <div class="summary-heading"><span>当前状态</span><b id="runtimeTime"></b></div>
-        <strong id="runtimePhase">等待分析</strong>
-        <p id="runtimeDetail">选择游戏窗口，然后采集并分析。</p>
-        <div class="progress-track" hidden><i id="runtimeProgress"></i></div>
-      </section>
+				<section class="workflow-summary" aria-live="polite">
+					<div class="summary-heading">
+						<span>当前状态</span>
+						<b id="runtimeTime"></b>
+					</div>
+					<strong id="runtimePhase">等待分析</strong>
+					<p id="runtimeDetail">选择游戏窗口，然后采集并分析。</p>
+					<div class="progress-track" hidden><i id="runtimeProgress"></i></div>
+				</section>
 
-      <details class="settings">
-        <summary>运行设置</summary>
-        <div class="settings-grid">
-          <label class="field"><span>初始时限</span><input id="solveTimeout" type="number" min="1" max="60" value="10"><em>秒</em></label>
-          <label class="field"><span>每次续时</span><input id="timeoutExtension" type="number" min="1" max="60" value="5"><em>秒</em></label>
-          <label class="field"><span>累计上限</span><input id="timeoutMax" type="number" min="1" max="300" value="30"><em>秒</em></label>
-          <label class="toggle-field"><input id="elasticTimeout" type="checkbox" checked><span>超时自动续时</span></label>
-          <label class="field"><span>点击后等待</span><input id="settleMs" type="number" min="20" max="3000" value="60"><em>ms</em></label>
-          <label class="field"><span>自动步数上限</span><input id="maxSteps" type="number" min="1" max="500" value="200"><em>步</em></label>
-          <label class="field"><span>源关卡</span><input id="sourceLevel" type="text" placeholder="自动读取"><em>可空</em></label>
-        </div>
-      </details>
+				<details class="settings">
+					<summary>运行设置</summary>
+					<div class="settings-grid">
+						<label class="field">
+							<span>初始时限</span>
+							<input id="solveTimeout" type="number" min="1" max="60" value="10" />
+							<em>秒</em>
+						</label>
+						<label class="field">
+							<span>每次续时</span>
+							<input id="timeoutExtension" type="number" min="1" max="60" value="5" />
+							<em>秒</em>
+						</label>
+						<label class="field">
+							<span>累计上限</span>
+							<input id="timeoutMax" type="number" min="1" max="300" value="30" />
+							<em>秒</em>
+						</label>
+						<label class="toggle-field">
+							<input id="elasticTimeout" type="checkbox" checked />
+							<span>超时自动续时</span>
+						</label>
+						<label class="field">
+							<span>点击后等待</span>
+							<input id="settleMs" type="number" min="20" max="3000" value="60" />
+							<em>ms</em>
+						</label>
+						<label class="field">
+							<span>自动步数上限</span>
+							<input id="maxSteps" type="number" min="1" max="500" value="200" />
+							<em>步</em>
+						</label>
+						<label class="field">
+							<span>源关卡</span>
+							<input id="sourceLevel" type="text" placeholder="自动读取" />
+							<em>可空</em>
+						</label>
+					</div>
+				</details>
 
-      <div class="minor-actions">
-        <button id="calibrateButton">校准棋盘</button>
-        <button id="reviewButton">快速复核</button>
-        <button id="hardResetButton" class="danger-quiet">强刷应用</button>
-      </div>
-      <p class="shortcut-hint">F6 分析 · F7 快速 · F8 连续 · F12 暂停</p>
-    </aside>
+				<div class="minor-actions">
+					<button id="calibrateButton">校准棋盘</button>
+					<button id="reviewButton">快速复核</button>
+					<button id="hardResetButton" class="danger-quiet">强刷应用</button>
+				</div>
+				<p class="shortcut-hint">F6 分析 · F7 快速 · F8 连续 · F12 暂停</p>
+			</aside>
 
-    <section class="stage panel">
-      <input id="screenshotInput" type="file" accept="image/png,image/jpeg,image/webp" hidden>
-      <div class="mobile-stage-chrome" aria-label="移动参考工具">
-        <section class="mobile-atom mobile-status-card" role="status" aria-live="polite">
-          <span class="mobile-kicker">移动参考</span>
-          <strong id="mobileSceneTitle">等待截图</strong>
-          <small id="mobileBoardMeta">从相册选择游戏截图</small>
-        </section>
-        <button id="mobileUploadQuick" type="button" class="mobile-atom mobile-upload-atom" aria-label="从相册更换截图">
-          <i aria-hidden="true">＋</i><span>截图</span>
-        </button>
-        <details id="mobileLayerCard" class="mobile-atom mobile-layer-card">
-          <summary aria-label="调整棋盘标注"><i aria-hidden="true">◫</i><span>标注</span></summary>
-          <div class="mobile-layer-options">
-            <label><input id="mobileShowGrid" type="checkbox" checked><span>网格</span></label>
-            <label><input id="mobileShowPieces" type="checkbox" checked><span>棋子</span></label>
-            <label><input id="mobileShowDirections" type="checkbox" checked><span>方向</span></label>
-          </div>
-        </details>
-        <section class="mobile-atom mobile-action-card" aria-label="参考操作">
-          <button id="mobileSolveButton" type="button" class="mobile-primary-action"><i aria-hidden="true">↗</i><span>生成解法</span></button>
-          <button id="mobileReviewButton" type="button"><i aria-hidden="true">≡</i><span>识别详情</span></button>
-        </section>
-        <button id="mobileSheetPeek" type="button" class="mobile-atom mobile-insight-card" aria-controls="mobileSheet" aria-expanded="false" aria-haspopup="dialog">
-          <span><i id="mobileInsightDot" aria-hidden="true"></i><b id="mobileInsightTitle">尚未分析</b></span>
-          <small id="mobileInsightDetail">上传截图后查看识别与解法</small>
-          <em aria-hidden="true">⌃</em>
-        </button>
-      </div>
-      <div class="stage-toolbar">
-        <div class="stage-heading">
-          <div class="stage-title-copy"><span class="eyebrow">棋盘画布</span><h2 id="boardTitle">等待采集</h2></div>
-          <div id="sandboxControls" class="sandbox-controls" hidden>
-            <span id="sandboxPosition">选择右侧步骤开始</span>
-            <button id="sandboxPrevious" type="button" aria-label="上一个推演局面">上一步</button>
-            <button id="sandboxNext" type="button">下一步</button>
-            <button id="sandboxBackground" type="button" title="切换真实截图的显示强度">底图淡化</button>
-            <button id="sandboxExit" type="button">退出沙盘</button>
-          </div>
-        </div>
-        <div class="stage-display">
-          <div class="stage-toggles" aria-label="棋盘标注">
-            <span>标注</span>
-            <label><input id="showGrid" type="checkbox" checked>网格</label>
-            <label><input id="showPieces" type="checkbox" checked>棋子</label>
-            <label><input id="showDirections" type="checkbox" checked>方向</label>
-          </div>
-        </div>
-      </div>
-      <section id="quickReviewBar" class="quick-review-bar" hidden aria-label="主棋盘快速复核">
-        <div class="quick-review-head">
-          <b>标注编辑</b>
-          <span id="quickReviewStatus">点击棋子，可直接修改类型和方向</span>
-        </div>
-        <div class="quick-review-controls">
-          <div id="quickPieceControls" class="quick-piece-controls" hidden>
-            <span id="quickPieceLabel" class="quick-piece-label">当前棋子</span>
-            <label class="quick-species-editor"><span>修改类型</span><select id="quickSpecies" aria-label="修改当前棋子类型">
-              <option value="sheep">普通羊</option><option value="goat">山羊</option>
-              <option value="rocket">火箭羊</option><option value="bomb">炸弹羊</option>
-              <option value="pink_sheep">粉羊</option><option value="black_sheep">黑羊</option>
-              <option value="pig">猪</option><option value="cattle">牛</option><option value="elephant">大象</option>
-            </select></label>
-            <div id="quickDirections" class="quick-directions" role="group" aria-label="修改当前棋子方向">
-              <button type="button" data-quick-facing="U" aria-label="朝上">↑</button>
-              <button type="button" data-quick-facing="D" aria-label="朝下">↓</button>
-              <button type="button" data-quick-facing="L" aria-label="朝左">←</button>
-              <button type="button" data-quick-facing="R" aria-label="朝右">→</button>
-            </div>
-          </div>
-          <div id="quickActionGroup" class="quick-action-group">
-            <button id="quickAddPiece" type="button">＋ 补棋子</button>
-            <button id="quickDeletePiece" type="button" class="danger-quiet" hidden>删除当前棋子</button>
-            <button id="quickUndo" type="button" hidden>撤销修改</button>
-            <button id="quickConfirmBoard" type="button" class="primary-action" hidden>完成复核</button>
-            <button id="quickAdvancedReview" type="button">完整编辑器</button>
-          </div>
-        </div>
-      </section>
-      <div id="viewport" class="viewport empty">
-        <div id="emptyState" class="empty-state">
-          <div class="desktop-empty-copy">
-            <div class="empty-visual" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-            <span class="eyebrow">实时分析画布</span>
-            <h3>尚无棋盘画面</h3>
-            <p>选择游戏窗口并采集分析，这里会显示真实截图、识别覆盖层和可交互的解题步骤。</p>
-          </div>
-          <section class="mobile-upload-card">
-            <span class="mobile-upload-mark" aria-hidden="true">⌁</span>
-            <p class="mobile-kicker">相册截图工作台</p>
-            <h2>把棋盘放进画布</h2>
-            <p>选择一张完整游戏截图。识别、标注和解法都会围绕这张图渐进展开。</p>
-            <button id="mobileUploadHero" type="button"><span>从相册选择截图</span><i aria-hidden="true">＋</i></button>
-            <small>支持 PNG、JPEG、WebP · 图片只在本机分析</small>
-          </section>
-        </div>
-        <div id="boardSurface" class="board-surface">
-          <img id="gameImage" alt="游戏实时截图">
-          <canvas id="overlay"></canvas>
-        </div>
-      </div>
-      <div class="stage-footer">
-        <span id="selectionInfo">选择棋子可快速复核</span>
-        <div class="stage-meta">
-          <div id="typeLegend" class="type-legend" aria-label="当前识别类型"></div>
-          <span id="captureInfo">未采集</span>
-        </div>
-      </div>
-      <button id="mobileSheetScrim" type="button" class="mobile-sheet-scrim" aria-label="关闭参考详情" tabindex="-1"></button>
-      <section id="mobileSheet" class="mobile-sheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mobileSheetTitle">
-        <header class="mobile-sheet-header">
-          <span class="mobile-sheet-handle" aria-hidden="true"></span>
-          <button id="mobileSheetClose" type="button">关闭</button>
-          <div><span class="mobile-kicker">棋盘参考</span><strong id="mobileSheetTitle">分析结果</strong></div>
-          <span class="mobile-sheet-header-spacer" aria-hidden="true"></span>
-        </header>
-        <nav class="mobile-sheet-tabs" role="tablist" aria-label="参考内容">
-          <button type="button" role="tab" data-mobile-tab="analysis" class="selected" aria-pressed="true" aria-selected="true" aria-controls="mobileAnalysisPanel">识别</button>
-          <button type="button" role="tab" data-mobile-tab="solution" aria-pressed="false" aria-selected="false" aria-controls="mobileSolutionPanel">解法</button>
-        </nav>
-        <div class="mobile-sheet-body">
-          <section id="mobileAnalysisPanel" class="mobile-sheet-panel" role="tabpanel">
-            <div id="mobileSafetyHero" class="mobile-safety-hero">
-              <span>棋盘状态</span><strong>等待截图</strong><small>上传后自动分析</small>
-            </div>
-            <div id="mobileSafetyList" class="mobile-reference-list"></div>
-          </section>
-          <section id="mobileSolutionPanel" class="mobile-sheet-panel" role="tabpanel" hidden>
-            <div id="mobileSolutionHero" class="mobile-solution-hero">
-              <span>解法参考</span><strong>尚未生成</strong><small>分析成功后可生成完整计划</small>
-            </div>
-            <ol id="mobileMoveList" class="mobile-move-list"></ol>
-          </section>
-        </div>
-      </section>
-    </section>
+			<section class="stage panel">
+				<input id="screenshotInput" type="file" accept="image/png,image/jpeg,image/webp" hidden />
+				<div class="mobile-stage-chrome" aria-label="移动参考工具">
+					<section class="mobile-atom mobile-status-card" role="status" aria-live="polite">
+						<span class="mobile-kicker">移动参考</span>
+						<strong id="mobileSceneTitle">等待截图</strong>
+						<small id="mobileBoardMeta">从相册选择游戏截图</small>
+					</section>
+					<button id="mobileUploadQuick" type="button" class="mobile-atom mobile-upload-atom" aria-label="从相册更换截图">
+						<i aria-hidden="true">＋</i>
+						<span>截图</span>
+					</button>
+					<details id="mobileLayerCard" class="mobile-atom mobile-layer-card">
+						<summary aria-label="调整棋盘标注">
+							<i aria-hidden="true">◫</i>
+							<span>标注</span>
+						</summary>
+						<div class="mobile-layer-options">
+							<label>
+								<input id="mobileShowGrid" type="checkbox" checked />
+								<span>网格</span>
+							</label>
+							<label>
+								<input id="mobileShowPieces" type="checkbox" checked />
+								<span>棋子</span>
+							</label>
+							<label>
+								<input id="mobileShowDirections" type="checkbox" checked />
+								<span>方向</span>
+							</label>
+						</div>
+					</details>
+					<section class="mobile-atom mobile-action-card" aria-label="参考操作">
+						<button id="mobileSolveButton" type="button" class="mobile-primary-action">
+							<i aria-hidden="true">↗</i>
+							<span>生成解法</span>
+						</button>
+						<button id="mobileReviewButton" type="button">
+							<i aria-hidden="true">≡</i>
+							<span>识别详情</span>
+						</button>
+					</section>
+					<button id="mobileSheetPeek" type="button" class="mobile-atom mobile-insight-card" aria-controls="mobileSheet" aria-expanded="false" aria-haspopup="dialog">
+						<span>
+							<i id="mobileInsightDot" aria-hidden="true"></i>
+							<b id="mobileInsightTitle">尚未分析</b>
+						</span>
+						<small id="mobileInsightDetail">上传截图后查看识别与解法</small>
+						<em aria-hidden="true">⌃</em>
+					</button>
+				</div>
+				<div class="stage-toolbar">
+					<div class="stage-heading">
+						<div class="stage-title-copy">
+							<span class="eyebrow">棋盘画布</span>
+							<h2 id="boardTitle">等待采集</h2>
+						</div>
+						<div id="sandboxControls" class="sandbox-controls" hidden>
+							<span id="sandboxPosition">选择右侧步骤开始</span>
+							<button id="sandboxPrevious" type="button" aria-label="上一个推演局面">上一步</button>
+							<button id="sandboxNext" type="button">下一步</button>
+							<button id="sandboxBackground" type="button" title="切换真实截图的显示强度">底图淡化</button>
+							<button id="sandboxExit" type="button">退出沙盘</button>
+						</div>
+					</div>
+					<div class="stage-display">
+						<div class="stage-toggles" aria-label="棋盘标注">
+							<span>标注</span>
+							<label>
+								<input id="showGrid" type="checkbox" checked />
+								网格
+							</label>
+							<label>
+								<input id="showPieces" type="checkbox" checked />
+								棋子
+							</label>
+							<label>
+								<input id="showDirections" type="checkbox" checked />
+								方向
+							</label>
+						</div>
+					</div>
+				</div>
+				<section id="quickReviewBar" class="quick-review-bar" hidden aria-label="主棋盘快速复核">
+					<div class="quick-review-head">
+						<b>标注编辑</b>
+						<span id="quickReviewStatus">点击棋子，可直接修改类型和方向</span>
+					</div>
+					<div class="quick-review-controls">
+						<div id="quickPieceControls" class="quick-piece-controls" hidden>
+							<span id="quickPieceLabel" class="quick-piece-label">当前棋子</span>
+							<label class="quick-species-editor">
+								<span>修改类型</span>
+								<select id="quickSpecies" aria-label="修改当前棋子类型">
+									<option value="sheep">普通羊</option>
+									<option value="bomb">炸弹羊</option>
+									<option value="rocket">火箭羊</option>
+									<option value="black_sheep">黑羊</option>
+									<option value="pink_sheep">粉羊</option>
+									<option value="goat">山羊</option>
+									<option value="pig">猪</option>
+									<option value="cattle">牛</option>
+									<option value="elephant">大象</option>
+								</select>
+							</label>
+							<div id="quickDirections" class="quick-directions" role="group" aria-label="修改当前棋子方向">
+								<button type="button" data-quick-facing="U" aria-label="朝上">↑</button>
+								<button type="button" data-quick-facing="D" aria-label="朝下">↓</button>
+								<button type="button" data-quick-facing="L" aria-label="朝左">←</button>
+								<button type="button" data-quick-facing="R" aria-label="朝右">→</button>
+							</div>
+						</div>
+						<div id="quickActionGroup" class="quick-action-group">
+							<button id="quickAddPiece" type="button">补棋子</button>
+							<button id="quickDeletePiece" type="button" class="danger-quiet" hidden>删除棋子</button>
+							<button id="quickUndo" type="button" hidden>撤销修改</button>
+							<button id="quickConfirmBoard" type="button" class="primary-action" hidden>完成复核</button>
+							<button id="quickAdvancedReview" type="button">完整编辑器</button>
+						</div>
+					</div>
+				</section>
+				<div id="viewport" class="viewport empty">
+					<div id="emptyState" class="empty-state">
+						<div class="desktop-empty-copy">
+							<div class="empty-visual" aria-hidden="true">
+								<i></i>
+								<i></i>
+								<i></i>
+								<i></i>
+							</div>
+							<span class="eyebrow">实时分析画布</span>
+							<h3>尚无棋盘画面</h3>
+							<p>选择游戏窗口并采集分析，这里会显示真实截图、识别覆盖层和可交互的解题步骤。</p>
+						</div>
+						<section class="mobile-upload-card">
+							<span class="mobile-upload-mark" aria-hidden="true">⌁</span>
+							<p class="mobile-kicker">相册截图工作台</p>
+							<h2>把棋盘放进画布</h2>
+							<p>选择一张完整游戏截图。识别、标注和解法都会围绕这张图渐进展开。</p>
+							<button id="mobileUploadHero" type="button">
+								<span>从相册选择截图</span>
+								<i aria-hidden="true">＋</i>
+							</button>
+							<small>支持 PNG、JPEG、WebP</small>
+						</section>
+					</div>
+					<div id="boardSurface" class="board-surface">
+						<img id="gameImage" alt="游戏实时截图" />
+						<canvas id="overlay"></canvas>
+					</div>
+				</div>
+				<div class="stage-footer">
+					<span id="selectionInfo">选择棋子快速复核</span>
+					<div class="stage-meta">
+						<div id="typeLegend" class="type-legend" aria-label="当前识别类型"></div>
+						<span id="captureInfo">未采集</span>
+					</div>
+				</div>
+				<button id="mobileSheetScrim" type="button" class="mobile-sheet-scrim" aria-label="关闭参考详情" tabindex="-1"></button>
+				<section id="mobileSheet" class="mobile-sheet" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="mobileSheetTitle">
+					<header class="mobile-sheet-header">
+						<span class="mobile-sheet-handle" aria-hidden="true"></span>
+						<button id="mobileSheetClose" type="button">关闭</button>
+						<div>
+							<span class="mobile-kicker">棋盘参考</span>
+							<strong id="mobileSheetTitle">分析结果</strong>
+						</div>
+						<span class="mobile-sheet-header-spacer" aria-hidden="true"></span>
+					</header>
+					<nav class="mobile-sheet-tabs" role="tablist" aria-label="参考内容">
+						<button type="button" role="tab" data-mobile-tab="analysis" class="selected" aria-pressed="true" aria-selected="true" aria-controls="mobileAnalysisPanel">识别</button>
+						<button type="button" role="tab" data-mobile-tab="solution" aria-pressed="false" aria-selected="false" aria-controls="mobileSolutionPanel">解法</button>
+					</nav>
+					<div class="mobile-sheet-body">
+						<section id="mobileAnalysisPanel" class="mobile-sheet-panel" role="tabpanel">
+							<div id="mobileSafetyHero" class="mobile-safety-hero">
+								<span>棋盘状态</span>
+								<strong>等待截图</strong>
+								<small>上传后自动分析</small>
+							</div>
+							<div id="mobileSafetyList" class="mobile-reference-list"></div>
+						</section>
+						<section id="mobileSolutionPanel" class="mobile-sheet-panel" role="tabpanel" hidden>
+							<div id="mobileSolutionHero" class="mobile-solution-hero">
+								<span>解法参考</span>
+								<strong>尚未生成</strong>
+								<small>分析成功后可生成完整计划</small>
+							</div>
+							<ol id="mobileMoveList" class="mobile-move-list"></ol>
+						</section>
+					</div>
+				</section>
+			</section>
 
-    <aside class="inspector panel">
-      <section class="status-panel">
-        <div class="panel-heading row">
-          <div><span class="eyebrow">执行门禁</span><h2>安全检查</h2></div>
-          <span id="sceneBadge" class="scene-badge unknown">未知</span>
-        </div>
-        <div class="safety-summary">
-          <strong id="executableValue">未检查</strong>
-          <span id="safetyMeta" hidden><b id="pieceCount">—</b> 只 · 健康度 <b id="healthScore">—</b></span>
-        </div>
-        <div id="blockers" class="blockers"><p class="muted">尚无安全检查结果。</p></div>
-      </section>
+			<aside class="inspector panel">
+				<section class="status-panel">
+					<div class="panel-heading row">
+						<div>
+							<span class="eyebrow">执行门禁</span>
+							<h2>安全检查</h2>
+						</div>
+						<span id="sceneBadge" class="scene-badge unknown">未知</span>
+					</div>
+					<div class="safety-summary">
+						<strong id="executableValue">未检查</strong>
+						<span id="safetyMeta" hidden>
+							<b id="pieceCount">—</b>
+							只 · 健康度
+							<b id="healthScore">—</b>
+						</span>
+					</div>
+					<div id="blockers" class="blockers"><p class="muted">尚无安全检查结果。</p></div>
+				</section>
 
-      <section id="planPanel" class="plan-panel">
-        <div class="panel-heading row">
-          <div><span class="eyebrow">路径规划</span><h2>解题计划</h2></div>
-          <span id="planBadge" class="plan-badge">未求解</span>
-        </div>
-        <div id="planSummary" class="plan-summary muted">分析完成后再求解。</div>
-        <div id="planFeedback" class="plan-feedback" role="status" aria-live="assertive" hidden></div>
-        <details id="searchProcess" class="search-process" open>
-          <summary><span>算法过程</span><b id="processSummary">等待求解</b></summary>
-          <ol id="processTimeline" class="process-timeline"></ol>
-        </details>
-        <ol id="moveList" class="move-list"></ol>
-      </section>
+				<section id="planPanel" class="plan-panel">
+					<div class="panel-heading row">
+						<div>
+							<span class="eyebrow">路径规划</span>
+							<h2>解题计划</h2>
+						</div>
+						<span id="planBadge" class="plan-badge">未求解</span>
+					</div>
+					<div id="planSummary" class="plan-summary muted">分析完成后再求解。</div>
+					<div id="planFeedback" class="plan-feedback" role="status" aria-live="assertive" hidden></div>
+					<details id="searchProcess" class="search-process" open>
+						<summary>
+							<span>算法过程</span>
+							<b id="processSummary">等待求解</b>
+						</summary>
+						<ol id="processTimeline" class="process-timeline"></ol>
+					</details>
+					<ol id="moveList" class="move-list"></ol>
+				</section>
 
-      <details class="diagnostics">
-        <summary>诊断详情</summary>
-        <pre id="diagnosticText">暂无</pre>
-      </details>
-    </aside>
-  </main>
+				<details class="diagnostics">
+					<summary>诊断详情</summary>
+					<pre id="diagnosticText">暂无</pre>
+				</details>
+			</aside>
+		</main>
 
-  <dialog id="calibrationDialog" class="modal calibration-modal">
-    <form method="dialog" class="modal-card">
-      <header><div><span class="eyebrow">校准</span><h2>校准棋盘四角</h2></div><button value="cancel" class="icon-button" aria-label="关闭">×</button></header>
-      <p class="modal-help">直接拖动四个圆点调整边界；选中支点后可用方向键逐像素微调，Shift + 方向键移动 10 px。放大只改变视图，不改变校准坐标。</p>
-      <div class="calibration-layout">
-        <div id="calibrationPreview" class="calibration-preview">
-          <div id="calibrationStage" class="calibration-stage">
-            <img id="calibrationImage" alt="校准截图">
-            <canvas id="calibrationCanvas" tabindex="0" aria-label="校准棋盘四角；点击支点后可用方向键微调"></canvas>
-          </div>
-        </div>
-        <div class="calibration-controls">
-          <section class="calibration-view-controls" aria-label="校准视图缩放">
-            <div class="calibration-view-heading"><b>视图缩放</b><output id="calibrationZoomValue" for="calibrationZoom">100%</output></div>
-            <div class="calibration-zoom-row">
-              <button id="calibrationZoomOut" type="button" aria-label="缩小校准视图">−</button>
-              <input id="calibrationZoom" type="range" min="75" max="400" step="25" value="100" aria-label="校准视图缩放比例">
-              <button id="calibrationZoomIn" type="button" aria-label="放大校准视图">＋</button>
-              <button id="calibrationZoomFit" type="button">适合</button>
-            </div>
-            <p>可拖动滚动条查看放大区域；Ctrl + 滚轮也可缩放。</p>
-          </section>
-          <div id="calibrationSelection" class="calibration-selection" aria-live="polite">当前支点：未选择</div>
-          <label class="field"><span>行数</span><input id="calibrationRows" type="number" min="2" max="40" value="18"></label>
-          <label class="field"><span>列数</span><input id="calibrationCols" type="number" min="2" max="30" value="12"></label>
-          <fieldset class="anchor-locks">
-            <legend>锁定支点</legend>
-            <label><input type="checkbox" data-calibration-lock="TL"> 左上</label>
-            <label><input type="checkbox" data-calibration-lock="TR"> 右上</label>
-            <label><input type="checkbox" data-calibration-lock="BR"> 右下</label>
-            <label><input type="checkbox" data-calibration-lock="BL"> 左下</label>
-          </fieldset>
-          <p class="control-hint">锁住已经对齐的角，再微调其余角；所有调整最终都会写入四角坐标。</p>
-          <label class="tune-field"><span>水平微移 <b id="tuneXValue">0</b> px</span><input id="tuneX" type="range" min="-30" max="30" step="0.5" value="0"></label>
-          <label class="tune-field"><span>垂直微移 <b id="tuneYValue">0</b> px</span><input id="tuneY" type="range" min="-30" max="30" step="0.5" value="0"></label>
-          <label class="tune-field"><span>旋转 <b id="tuneRotationValue">0</b>°</span><input id="tuneRotation" type="range" min="-12" max="12" step="0.1" value="0"></label>
-          <label class="tune-field"><span>水平倾斜 <b id="tuneSkewXValue">0</b></span><input id="tuneSkewX" type="range" min="-0.25" max="0.25" step="0.005" value="0"></label>
-          <label class="tune-field"><span>垂直倾斜 <b id="tuneSkewYValue">0</b></span><input id="tuneSkewY" type="range" min="-0.25" max="0.25" step="0.005" value="0"></label>
-          <button id="resetCalibration" type="button">恢复已保存标定</button>
-          <button id="saveCalibration" type="button" class="primary-action">保存并重分析</button>
-        </div>
-      </div>
-    </form>
-  </dialog>
+		<dialog id="calibrationDialog" class="modal calibration-modal">
+			<form method="dialog" class="modal-card">
+				<header>
+					<div>
+						<span class="eyebrow">校准</span>
+						<h2>校准棋盘四角</h2>
+					</div>
+					<button value="cancel" class="icon-button" aria-label="关闭">×</button>
+				</header>
+				<p class="modal-help">直接拖动四个圆点调整边界；选中支点后可用方向键逐像素微调，Shift + 方向键移动 10 px。放大只改变视图，不改变校准坐标。</p>
+				<div class="calibration-layout">
+					<div id="calibrationPreview" class="calibration-preview">
+						<div id="calibrationStage" class="calibration-stage">
+							<img id="calibrationImage" alt="校准截图" />
+							<canvas id="calibrationCanvas" tabindex="0" aria-label="校准棋盘四角；点击支点后可用方向键微调"></canvas>
+						</div>
+					</div>
+					<div class="calibration-controls">
+						<section class="calibration-view-controls" aria-label="校准视图缩放">
+							<div class="calibration-view-heading">
+								<b>视图缩放</b>
+								<output id="calibrationZoomValue" for="calibrationZoom">100%</output>
+							</div>
+							<div class="calibration-zoom-row">
+								<button id="calibrationZoomOut" type="button" aria-label="缩小校准视图">−</button>
+								<input id="calibrationZoom" type="range" min="75" max="400" step="25" value="100" aria-label="校准视图缩放比例" />
+								<button id="calibrationZoomIn" type="button" aria-label="放大校准视图">＋</button>
+								<button id="calibrationZoomFit" type="button">适合</button>
+							</div>
+							<p>可拖动滚动条查看放大区域；Ctrl + 滚轮也可缩放。</p>
+						</section>
+						<div id="calibrationSelection" class="calibration-selection" aria-live="polite">当前支点：未选择</div>
+						<label class="field">
+							<span>行数</span>
+							<input id="calibrationRows" type="number" min="2" max="40" value="18" />
+						</label>
+						<label class="field">
+							<span>列数</span>
+							<input id="calibrationCols" type="number" min="2" max="30" value="12" />
+						</label>
+						<fieldset class="anchor-locks">
+							<legend>锁定支点</legend>
+							<label>
+								<input type="checkbox" data-calibration-lock="TL" />
+								左上
+							</label>
+							<label>
+								<input type="checkbox" data-calibration-lock="TR" />
+								右上
+							</label>
+							<label>
+								<input type="checkbox" data-calibration-lock="BR" />
+								右下
+							</label>
+							<label>
+								<input type="checkbox" data-calibration-lock="BL" />
+								左下
+							</label>
+						</fieldset>
+						<p class="control-hint">锁住已经对齐的角，再微调其余角；所有调整最终都会写入四角坐标。</p>
+						<label class="tune-field">
+							<span>
+								水平微移
+								<b id="tuneXValue">0</b>
+								px
+							</span>
+							<input id="tuneX" type="range" min="-30" max="30" step="0.5" value="0" />
+						</label>
+						<label class="tune-field">
+							<span>
+								垂直微移
+								<b id="tuneYValue">0</b>
+								px
+							</span>
+							<input id="tuneY" type="range" min="-30" max="30" step="0.5" value="0" />
+						</label>
+						<label class="tune-field">
+							<span>
+								旋转
+								<b id="tuneRotationValue">0</b>
+								°
+							</span>
+							<input id="tuneRotation" type="range" min="-12" max="12" step="0.1" value="0" />
+						</label>
+						<label class="tune-field">
+							<span>
+								水平倾斜
+								<b id="tuneSkewXValue">0</b>
+							</span>
+							<input id="tuneSkewX" type="range" min="-0.25" max="0.25" step="0.005" value="0" />
+						</label>
+						<label class="tune-field">
+							<span>
+								垂直倾斜
+								<b id="tuneSkewYValue">0</b>
+							</span>
+							<input id="tuneSkewY" type="range" min="-0.25" max="0.25" step="0.005" value="0" />
+						</label>
+						<button id="resetCalibration" type="button">恢复已保存标定</button>
+						<button id="saveCalibration" type="button" class="primary-action">保存并重分析</button>
+					</div>
+				</div>
+			</form>
+		</dialog>
 
-  <dialog id="reviewDialog" class="modal review-modal">
-    <form method="dialog" class="review-workspace">
-      <header class="review-header">
-        <div class="review-title">
-          <span class="review-title-mark" aria-hidden="true">▦</span>
-          <div class="review-title-copy">
-            <span class="eyebrow">棋盘编辑器</span>
-            <div><h2>人工校验</h2><span id="reviewBoardMeta" class="review-board-meta">等待棋盘</span></div>
-          </div>
-          <span id="reviewDirtyBadge" class="review-dirty-badge">识别结果</span>
-        </div>
-        <div class="review-history">
-          <div class="history-group" role="group" aria-label="编辑历史">
-            <button id="editorUndo" type="button" title="撤销 (Ctrl+Z)" aria-label="撤销" disabled><i>↶</i><span>撤销</span><kbd>Ctrl Z</kbd></button>
-            <button id="editorRedo" type="button" title="重做 (Ctrl+Y)" aria-label="重做" disabled><i>↷</i><span>重做</span><kbd>Ctrl Y</kbd></button>
-          </div>
-          <button id="editorReset" type="button" class="quiet-action" title="恢复本次识别结果">恢复识别</button>
-          <button value="cancel" class="icon-button" aria-label="关闭">×</button>
-        </div>
-      </header>
+		<dialog id="reviewDialog" class="modal review-modal">
+			<form method="dialog" class="review-workspace">
+				<header class="review-header">
+					<div class="review-title">
+						<span class="review-title-mark" aria-hidden="true">▦</span>
+						<div class="review-title-copy">
+							<span class="eyebrow">棋盘编辑器</span>
+							<div>
+								<h2>人工校验</h2>
+								<span id="reviewBoardMeta" class="review-board-meta">等待棋盘</span>
+							</div>
+						</div>
+						<span id="reviewDirtyBadge" class="review-dirty-badge">识别结果</span>
+					</div>
+					<div class="review-history">
+						<div class="history-group" role="group" aria-label="编辑历史">
+							<button id="editorUndo" type="button" title="撤销 (Ctrl+Z)" aria-label="撤销" disabled>
+								<i>↶</i>
+								<span>撤销</span>
+								<kbd>Ctrl Z</kbd>
+							</button>
+							<button id="editorRedo" type="button" title="重做 (Ctrl+Y)" aria-label="重做" disabled>
+								<i>↷</i>
+								<span>重做</span>
+								<kbd>Ctrl Y</kbd>
+							</button>
+						</div>
+						<button id="editorReset" type="button" class="quiet-action" title="恢复本次识别结果">恢复识别</button>
+						<button value="cancel" class="icon-button" aria-label="关闭">×</button>
+					</div>
+				</header>
 
-      <div class="review-body">
-        <section class="review-canvas-panel">
-          <header class="review-canvas-toolbar">
-            <div class="active-tool-copy">
-              <strong id="reviewToolName">选择棋子</strong>
-              <span id="reviewToolHint">点击选择，拖动可换格；属性修改会立即保存</span>
-            </div>
-            <div class="review-object-nav" aria-label="切换待复核对象">
-              <span>待复核</span>
-              <button id="previousReview" type="button" title="上一个待复核对象 ([)" aria-label="上一个待复核对象">‹</button>
-              <b id="reviewQueueStatus">0 / 0</b>
-              <button id="nextReview" type="button" title="下一个待复核对象 (])" aria-label="下一个待复核对象">›</button>
-            </div>
-          </header>
-          <div class="review-preview">
-            <img id="reviewImage" alt="人工复核截图">
-            <canvas id="reviewCanvas" aria-label="直接编辑棋盘中的棋子、狼和栅栏"></canvas>
-          </div>
-          <footer class="review-canvas-footer">
-            <div id="reviewLegend" class="review-legend"></div>
-            <span class="canvas-hint">点击羊以选中</span>
-          </footer>
-        </section>
+				<div class="review-body">
+					<section class="review-canvas-panel">
+						<header class="review-canvas-toolbar">
+							<div class="active-tool-copy">
+								<strong id="reviewToolName">选择棋子</strong>
+								<span id="reviewToolHint">点击选择，拖动可换格；属性修改会立即保存</span>
+							</div>
+							<div class="review-object-nav" aria-label="切换待复核对象">
+								<span>待复核</span>
+								<button id="previousReview" type="button" title="上一个待复核对象 ([)" aria-label="上一个待复核对象">‹</button>
+								<b id="reviewQueueStatus">0 / 0</b>
+								<button id="nextReview" type="button" title="下一个待复核对象 (])" aria-label="下一个待复核对象">›</button>
+							</div>
+						</header>
+						<div class="review-preview">
+							<img id="reviewImage" alt="人工复核截图" />
+							<canvas id="reviewCanvas" aria-label="直接编辑棋盘中的棋子、狼和栅栏"></canvas>
+						</div>
+						<footer class="review-canvas-footer">
+							<div id="reviewLegend" class="review-legend"></div>
+							<span class="canvas-hint">点击羊以选中</span>
+						</footer>
+					</section>
 
-        <aside class="piece-editor">
-          <header class="inspector-heading">
-            <div><span class="eyebrow">棋盘编辑</span><strong id="inspectorTitle">当前对象</strong></div>
-            <span id="inspectorModePill" class="inspector-mode-pill">选择模式</span>
-          </header>
-          <section class="editor-toolbox" aria-label="棋盘编辑工具">
-            <div class="editor-section-title"><span>编辑工具</span><b id="toolboxHint">选中工具后直接操作棋盘</b></div>
-            <div class="editor-tool-grid" role="toolbar" aria-label="棋盘编辑工具">
-              <button id="selectPieceMode" type="button" class="selected" title="选择和移动棋子 (V)" aria-pressed="true"><i>↖</i><b>选择</b><kbd>V</kbd></button>
-              <button id="addPieceMode" type="button" title="补充棋子 (A)" aria-pressed="false"><i>＋</i><b>补棋子</b><kbd>A</kbd></button>
-              <button id="wolfMode" type="button" title="添加狼危险格 (W)" aria-pressed="false"><i>◆</i><b>狼格</b><kbd>W</kbd></button>
-              <button id="fenceMode" type="button" title="添加栅栏 (F)" aria-pressed="false"><i>╫</i><b>栅栏</b><kbd>F</kbd></button>
-              <button id="clearCellMode" type="button" class="clear-tool" title="清除误判格中的棋子、狼格或栅栏 (E)" aria-pressed="false"><i>⌫</i><b>清除</b><kbd>E</kbd></button>
-            </div>
-          </section>
-          <section class="editor-section selection-editor">
-            <div id="editorEmpty" class="empty-editor">
-              <i aria-hidden="true">↖</i>
-              <b>从棋盘选择一只棋子</b>
-              <span>点击查看属性，拖动即可更换占用格。</span>
-              <button id="emptyAddPiece" type="button">＋ 直接补一只</button>
-            </div>
-            <div id="editorForm" hidden>
-              <div class="selected-title"><span id="selectedPieceId"></span><em id="selectedPieceState">未修改</em></div>
-              <div class="selection-summary"><strong id="selectedSpeciesLabel">普通羊</strong><span id="selectedCells">—</span></div>
-              <div id="draftSteps" class="draft-steps" hidden>
-                <span class="done">1 选类型</span><span>2 点格子</span><span>3 添加</span>
-              </div>
-              <input id="editorSpecies" type="hidden" value="sheep">
-              <div class="property-group">
-                <span class="property-label">物种 <small>按 1–9 快速切换</small></span>
-                <div class="species-palette" aria-label="选择物种">
-                  <button type="button" data-species="sheep"><span>羊</span><kbd>1</kbd></button>
-                  <button type="button" data-species="rocket"><span>火箭</span><kbd>2</kbd></button>
-                  <button type="button" data-species="bomb"><span>炸弹</span><kbd>3</kbd></button>
-                  <button type="button" data-species="pink_sheep"><span>粉羊</span><kbd>4</kbd></button>
-                  <button type="button" data-species="black_sheep"><span>黑羊</span><kbd>5</kbd></button>
-                  <button type="button" data-species="pig"><span>猪</span><kbd>6</kbd></button>
-                  <button type="button" data-species="cattle"><span>牛</span><kbd>7</kbd></button>
-                  <button type="button" data-species="goat"><span>山羊</span><kbd>8</kbd></button>
-                  <button type="button" data-species="elephant"><span>大象</span><kbd>9</kbd></button>
-                </div>
-              </div>
-              <div class="property-group"><span class="property-label">朝向 <small>R 顺时针旋转</small></span><input id="editorFacing" type="hidden" value="R">
-                <div class="direction-pad" aria-label="选择羊的朝向">
-                  <button type="button" data-facing="U" aria-label="朝上">↑<small>上</small></button>
-                  <button type="button" data-facing="D" aria-label="朝下">↓<small>下</small></button>
-                  <button type="button" data-facing="L" aria-label="朝左">←<small>左</small></button>
-                  <button type="button" data-facing="R" aria-label="朝右">→<small>右</small></button>
-                </div>
-              </div>
-              <div id="pigFields" class="special-fields" hidden>
-                <label><input id="editorAwake" type="checkbox"> 已唤醒</label>
-              </div>
-              <div id="bombFields" class="special-fields" hidden>
-                <label>耐久 <input id="editorHitLimit" type="number" min="1" max="9" value="3"></label>
-                <label>剩余 <input id="editorHitsRemaining" type="number" min="1" max="9" value="3"></label>
-              </div>
-              <label id="continuousAddControl" class="continuous-add" hidden><input id="continueAdding" type="checkbox"> 添加后继续补同类</label>
-              <div class="editor-actions">
-                <button id="duplicatePiece" type="button" title="复制当前类型和方向后补一只 (D)">复制新增</button>
-                <button id="deletePiece" type="button" class="danger-quiet" title="删除当前棋子 (Delete)">删除</button>
-                <span id="editorAutoSave" class="editor-autosave">✓ 修改即时保存</span>
-                <button id="applyPieceEdit" type="button" class="primary-action">添加棋子</button>
-              </div>
-            </div>
-          </section>
+					<aside class="piece-editor">
+						<header class="inspector-heading">
+							<div>
+								<span class="eyebrow">棋盘编辑</span>
+								<strong id="inspectorTitle">当前对象</strong>
+							</div>
+							<span id="inspectorModePill" class="inspector-mode-pill">选择模式</span>
+						</header>
+						<section class="editor-toolbox" aria-label="棋盘编辑工具">
+							<div class="editor-section-title">
+								<span>编辑工具</span>
+								<b id="toolboxHint">选中工具后直接操作棋盘</b>
+							</div>
+							<div class="editor-tool-grid" role="toolbar" aria-label="棋盘编辑工具">
+								<button id="selectPieceMode" type="button" class="selected" title="选择和移动棋子 (V)" aria-pressed="true">
+									<i>↖</i>
+									<b>选择</b>
+									<kbd>V</kbd>
+								</button>
+								<button id="addPieceMode" type="button" title="补充棋子 (A)" aria-pressed="false">
+									<i>＋</i>
+									<b>补棋子</b>
+									<kbd>A</kbd>
+								</button>
+								<button id="wolfMode" type="button" title="添加狼危险格 (W)" aria-pressed="false">
+									<i>◆</i>
+									<b>狼格</b>
+									<kbd>W</kbd>
+								</button>
+								<button id="fenceMode" type="button" title="添加栅栏 (F)" aria-pressed="false">
+									<i>╫</i>
+									<b>栅栏</b>
+									<kbd>F</kbd>
+								</button>
+								<button id="clearCellMode" type="button" class="clear-tool" title="清除误判格中的棋子、狼格或栅栏 (E)" aria-pressed="false">
+									<i>⌫</i>
+									<b>清除</b>
+									<kbd>E</kbd>
+								</button>
+							</div>
+						</section>
+						<section class="editor-section selection-editor">
+							<div id="editorEmpty" class="empty-editor">
+								<i aria-hidden="true">↖</i>
+								<b>从棋盘选择一只棋子</b>
+								<span>点击查看属性，拖动即可更换占用格。</span>
+								<button id="emptyAddPiece" type="button">＋ 直接补一只</button>
+							</div>
+							<div id="editorForm" hidden>
+								<div class="selected-title">
+									<span id="selectedPieceId"></span>
+									<em id="selectedPieceState">未修改</em>
+								</div>
+								<div class="selection-summary">
+									<strong id="selectedSpeciesLabel">普通羊</strong>
+									<span id="selectedCells">—</span>
+								</div>
+								<div id="draftSteps" class="draft-steps" hidden>
+									<span class="done">1 选类型</span>
+									<span>2 点格子</span>
+									<span>3 添加</span>
+								</div>
+								<input id="editorSpecies" type="hidden" value="sheep" />
+								<div class="property-group">
+									<span class="property-label">
+										物种
+										<small>按 1–9 快速切换</small>
+									</span>
+									<div class="species-palette" aria-label="选择物种">
+										<button type="button" data-species="sheep">
+											<span>羊</span>
+											<kbd>1</kbd>
+										</button>
+										<button type="button" data-species="rocket">
+											<span>火箭</span>
+											<kbd>2</kbd>
+										</button>
+										<button type="button" data-species="bomb">
+											<span>炸弹</span>
+											<kbd>3</kbd>
+										</button>
+										<button type="button" data-species="pink_sheep">
+											<span>粉羊</span>
+											<kbd>4</kbd>
+										</button>
+										<button type="button" data-species="black_sheep">
+											<span>黑羊</span>
+											<kbd>5</kbd>
+										</button>
+										<button type="button" data-species="pig">
+											<span>猪</span>
+											<kbd>6</kbd>
+										</button>
+										<button type="button" data-species="cattle">
+											<span>牛</span>
+											<kbd>7</kbd>
+										</button>
+										<button type="button" data-species="goat">
+											<span>山羊</span>
+											<kbd>8</kbd>
+										</button>
+										<button type="button" data-species="elephant">
+											<span>大象</span>
+											<kbd>9</kbd>
+										</button>
+									</div>
+								</div>
+								<div class="property-group">
+									<span class="property-label">
+										朝向
+										<small>R 顺时针旋转</small>
+									</span>
+									<input id="editorFacing" type="hidden" value="R" />
+									<div class="direction-pad" aria-label="选择羊的朝向">
+										<button type="button" data-facing="U" aria-label="朝上">
+											↑
+											<small>上</small>
+										</button>
+										<button type="button" data-facing="D" aria-label="朝下">
+											↓
+											<small>下</small>
+										</button>
+										<button type="button" data-facing="L" aria-label="朝左">
+											←
+											<small>左</small>
+										</button>
+										<button type="button" data-facing="R" aria-label="朝右">
+											→
+											<small>右</small>
+										</button>
+									</div>
+								</div>
+								<div id="pigFields" class="special-fields" hidden>
+									<label>
+										<input id="editorAwake" type="checkbox" />
+										已唤醒
+									</label>
+								</div>
+								<div id="bombFields" class="special-fields" hidden>
+									<label>
+										耐久
+										<input id="editorHitLimit" type="number" min="1" max="9" value="3" />
+									</label>
+									<label>
+										剩余
+										<input id="editorHitsRemaining" type="number" min="1" max="9" value="3" />
+									</label>
+								</div>
+								<label id="continuousAddControl" class="continuous-add" hidden>
+									<input id="continueAdding" type="checkbox" />
+									添加后继续补同类
+								</label>
+								<div class="editor-actions">
+									<button id="duplicatePiece" type="button" title="复制当前类型和方向后补一只 (D)">复制新增</button>
+									<button id="deletePiece" type="button" class="danger-quiet" title="删除当前棋子 (Delete)">删除</button>
+									<span id="editorAutoSave" class="editor-autosave">✓ 修改即时保存</span>
+									<button id="applyPieceEdit" type="button" class="primary-action">添加棋子</button>
+								</div>
+							</div>
+						</section>
 
-          <section id="obstacleForm" class="editor-section obstacle-form" hidden>
-            <div class="obstacle-mode-card">
-              <i id="obstacleIcon" aria-hidden="true">◆</i>
-              <div><b id="obstacleTitle">狼危险格</b><p id="obstacleHelp" class="muted"></p></div>
-            </div>
-            <div id="fenceDirections" class="fence-directions" hidden>
-              <span>格内栅栏</span>
-              <div>
-                <button type="button" data-fence-direction="H" class="selected"><i>━</i>横栏</button>
-                <button type="button" data-fence-direction="V"><i>┃</i>竖栏</button>
-              </div>
-              <span>棋盘出口边</span>
-              <div class="edge-fence-grid">
-                <button type="button" data-fence-direction="U"><i>↑</i>上边</button>
-                <button type="button" data-fence-direction="D"><i>↓</i>下边</button>
-                <button type="button" data-fence-direction="L"><i>←</i>左边</button>
-                <button type="button" data-fence-direction="R"><i>→</i>右边</button>
-              </div>
-            </div>
-            <p id="obstacleActionHint" class="obstacle-action-hint">此工具只负责添加；误标请用“清除”。</p>
-          </section>
+						<section id="obstacleForm" class="editor-section obstacle-form" hidden>
+							<div class="obstacle-mode-card">
+								<i id="obstacleIcon" aria-hidden="true">◆</i>
+								<div>
+									<b id="obstacleTitle">狼危险格</b>
+									<p id="obstacleHelp" class="muted"></p>
+								</div>
+							</div>
+							<div id="fenceDirections" class="fence-directions" hidden>
+								<span>格内栅栏</span>
+								<div>
+									<button type="button" data-fence-direction="H" class="selected">
+										<i>━</i>
+										横栏
+									</button>
+									<button type="button" data-fence-direction="V">
+										<i>┃</i>
+										竖栏
+									</button>
+								</div>
+								<span>棋盘出口边</span>
+								<div class="edge-fence-grid">
+									<button type="button" data-fence-direction="U">
+										<i>↑</i>
+										上边
+									</button>
+									<button type="button" data-fence-direction="D">
+										<i>↓</i>
+										下边
+									</button>
+									<button type="button" data-fence-direction="L">
+										<i>←</i>
+										左边
+									</button>
+									<button type="button" data-fence-direction="R">
+										<i>→</i>
+										右边
+									</button>
+								</div>
+							</div>
+							<p id="obstacleActionHint" class="obstacle-action-hint">此工具只负责添加；误标请用“清除”。</p>
+						</section>
 
-          <section class="editor-section learning-section">
-            <details class="learning-tools">
-              <summary>学习与识别样本</summary>
-              <p>完成复核后，可把本次人工修正保存为后续识别依据。</p>
-              <label class="field"><span>备注</span><input id="sampleNote" type="text" placeholder="例如：漏识别黑羊"></label>
-              <button id="saveSample" type="button">保存学习样本</button>
-            </details>
-          </section>
-        </aside>
-      </div>
+						<section class="editor-section learning-section">
+							<details class="learning-tools">
+								<summary>学习与识别样本</summary>
+								<p>完成复核后，可把本次人工修正保存为后续识别依据。</p>
+								<label class="field">
+									<span>备注</span>
+									<input id="sampleNote" type="text" placeholder="例如：漏识别黑羊" />
+								</label>
+								<button id="saveSample" type="button">保存学习样本</button>
+							</details>
+						</section>
+					</aside>
+				</div>
 
-      <footer class="review-commandbar">
-        <div class="review-feedback"><i aria-hidden="true"></i><span id="reviewMessage">选择工具后直接在棋盘上操作。</span></div>
-        <span class="review-shortcuts">V 选择 · A 新增 · W 狼格 · F 栅栏 · E 清除</span>
-        <button id="cancelEditorDraft" type="button" class="quiet-action" hidden>取消当前操作</button>
-        <button id="confirmBoard" type="button" class="primary-action review-confirm"><span>完成复核</span><kbd>Ctrl Enter</kbd></button>
-      </footer>
-    </form>
-  </dialog>
+				<footer class="review-commandbar">
+					<div class="review-feedback">
+						<i aria-hidden="true"></i>
+						<span id="reviewMessage">选择工具后直接在棋盘上操作。</span>
+					</div>
+					<span class="review-shortcuts">V 选择 · A 新增 · W 狼格 · F 栅栏 · E 清除</span>
+					<button id="cancelEditorDraft" type="button" class="quiet-action" hidden>取消当前操作</button>
+					<button id="confirmBoard" type="button" class="primary-action review-confirm">
+						<span>完成复核</span>
+						<kbd>Ctrl Enter</kbd>
+					</button>
+				</footer>
+			</form>
+		</dialog>
 
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <!-- 普通脚本按依赖顺序加载，共享同一全局词法作用域；main.js 负责绑定与启动 -->
-  <script src="js/core.js"></script>
-  <script src="js/mode.js"></script>
-  <script src="js/jobs.js"></script>
-  <script src="js/panels.js"></script>
-  <script src="js/board.js"></script>
-  <script src="js/quick_review.js"></script>
-  <script src="js/editor.js"></script>
-  <script src="js/calibration.js"></script>
-  <script src="js/review_canvas.js"></script>
-  <script src="js/main.js"></script>
-</body>
+		<div id="toast" class="toast" role="status" aria-live="polite"></div>
+		<!-- 普通脚本按依赖顺序加载，共享同一全局词法作用域；main.js 负责绑定与启动 -->
+		<script src="js/core.js"></script>
+		<script src="js/mode.js"></script>
+		<script src="js/jobs.js"></script>
+		<script src="js/panels.js"></script>
+		<script src="js/board.js"></script>
+		<script src="js/quick_review.js"></script>
+		<script src="js/editor.js"></script>
+		<script src="js/calibration.js"></script>
+		<script src="js/review_canvas.js"></script>
+		<script src="js/main.js"></script>
+	</body>
 </html>

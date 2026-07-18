@@ -84,9 +84,11 @@ scripts/
   gui/                   Api 按职责拆分：common / geometry / window / settings /
                          analysis / editor / board_state / solving / workflow /
                          execution / wolf / calibration
-  vision/                视觉识别：masks / species_sheep / species_special /
-                         hazards / segmentation / conflicts / pipeline /
-                         render / export
+  vision/                视觉识别：masks / segmentation / conflicts /
+                         pipeline / render / export
+    detectors/           每种棋子一个文件：arrow / pink_sheep / pig / goat /
+                         rocket / bomb / cattle / elephant / black_sheep /
+                         wolf / fence
   recognition/           模型层：features / fusion / manual_learning /
                          direction_learning / temporal
   detect_occupancy.py    识别 CLI 门面（实现在 vision/）

@@ -12,14 +12,20 @@ import safety
 import board_io
 import recognition
 from paths import image_path
-from .conflicts import apply_species_anchors, classify_black_sheep, recover_black_sheep_clusters, reject_departing_edge_pieces, reject_hazard_piece_overlaps, reject_internal_fence_overlaps, reject_partial_exit_candidates, resolve_candidates, resolve_goat_wolf_conflicts, suppress_special_hazard_overlaps
+from .conflicts import (apply_species_anchors, reject_departing_edge_pieces,
+                        reject_hazard_piece_overlaps, reject_internal_fence_overlaps,
+                        reject_partial_exit_candidates, resolve_candidates,
+                        resolve_goat_wolf_conflicts, suppress_special_hazard_overlaps)
+from .detectors import (_arrow_candidates, _cattle_candidates,
+                        _gesture_target_arrow_candidates, _rocket_candidates,
+                        bomb_markers, classify_black_sheep, elephant_pieces,
+                        fence_edges, goat_candidates, pig_candidates,
+                        pink_sheep_candidates, recover_black_sheep_clusters,
+                        wolf_hazards)
 from .export import _conflicts, _write_json, to_board, to_layout
-from .hazards import fence_edges, wolf_hazards
 from .masks import _grid_from_args, arrow_mask, gesture_occlusion, make_masks
 from .render import _remove_obsolete_images, render_grid_labels, render_layout, render_rect_debug
-from .segmentation import _arrow_candidates, _cattle_candidates, _gesture_target_arrow_candidates, _score_region, watershed_regions
-from .species_sheep import goat_candidates, pig_candidates, pink_sheep_candidates
-from .species_special import _rocket_candidates, bomb_markers, elephant_pieces
+from .segmentation import _score_region, watershed_regions
 
 
 def analyze(game: np.ndarray, grid: G.BoardGrid, temporal_history=None,

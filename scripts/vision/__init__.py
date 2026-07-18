@@ -1,19 +1,17 @@
 """Visual candidate detection for the rectified game board.
 
-Split from the original detect_occupancy module:
-
-* ``masks``           rectification, grid constants, colour masks, gesture occlusion;
-* ``species_sheep``   pink sheep / pig / goat detectors;
-* ``species_special`` rocket / bomb / cattle / elephant detectors;
-* ``hazards``         fence edges and wolves;
-* ``segmentation``    watershed bodies, arrows, region scoring;
-* ``conflicts``       cross-detector conflict resolution;
-* ``pipeline``        full-frame analyze/detect and the CLI;
-* ``render``          debug images;
-* ``export``          solver board and layout JSON.
+* ``masks``         rectification, grid constants, colour masks, gesture occlusion;
+* ``detectors``     one module per piece type (arrow, pig, goat, rocket, bomb,
+                    cattle, elephant, pink/black sheep, wolf, fence);
+* ``segmentation``  watershed bodies and region scoring;
+* ``conflicts``     cross-detector conflict resolution;
+* ``pipeline``      full-frame analyze/detect and the CLI;
+* ``render``        debug images;
+* ``export``        solver board and layout JSON.
 """
 from __future__ import annotations
 
+from . import detectors
 from .masks import (
     CELL,
     DIRS,
@@ -22,26 +20,24 @@ from .masks import (
     arrow_mask,
     _grid_from_args,
 )
-from .species_sheep import (
+from .detectors import (
     pink_sheep_candidates,
     pig_candidates,
     goat_candidates,
-)
-from .species_special import (
     rocket_masks,
     classify_bomb_digit,
     bomb_markers,
     cattle_masks,
     elephant_pieces,
-)
-from .hazards import (
     fence_edges,
     wolf_hazards,
+    _arrow_candidates,
+    _gesture_target_arrow_candidates,
+    classify_black_sheep,
+    recover_black_sheep_clusters,
 )
 from .segmentation import (
     watershed_regions,
-    _arrow_candidates,
-    _gesture_target_arrow_candidates,
 )
 from .conflicts import (
     resolve_candidates,
@@ -50,8 +46,6 @@ from .conflicts import (
     WOLF_DIAGONAL_MIN_CELLS,
     resolve_goat_wolf_conflicts,
     reject_hazard_piece_overlaps,
-    classify_black_sheep,
-    recover_black_sheep_clusters,
     reject_partial_exit_candidates,
     reject_departing_edge_pieces,
     apply_species_anchors,

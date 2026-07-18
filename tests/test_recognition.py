@@ -42,7 +42,7 @@ def test_tutorial_hand_recovers_only_unique_red_target_arrow(monkeypatch):
     body = np.zeros(rect.shape[:2], dtype=np.uint8)
     hidden = candidate(71, [(14, 10), (15, 10)], "D", 1895, detector="arrow")
     hidden.update({"area": 377, "center_rect": [692.98, 932.7]})
-    monkeypatch.setattr(D.segmentation, "_arrow_candidates", lambda *_args, **_kwargs: [hidden])
+    monkeypatch.setattr(D.detectors.arrow, "_arrow_candidates", lambda *_args, **_kwargs: [hidden])
     gesture = {
         "affected_cells": [[14, 10], [15, 10], [15, 11]],
         "components": [{
