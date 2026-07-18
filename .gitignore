@@ -16,3 +16,5 @@ data/runtime_settings.json
 
 .venv/
 venv/
+
+node_modules/

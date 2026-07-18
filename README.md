@@ -36,6 +36,21 @@ python scripts/app.py
 
 该模式不显示窗口选择、自动采集、快速点击、连续执行和运行参数。上传帧在后端标记为 `reference` 输入；即使绕过界面调用执行接口，也会被拒绝。
 
+## 网页求解
+
+<https://xhxiaiein.github.io/sliding-sheep/app/solve.html>
+
+求解引擎有一份 TypeScript 实现（`web/solver/`，与 Python 版行为等价），编译为
+`app/js/solver/` 后在浏览器 Web Worker 中运行：导入 `board.json` 或使用示例棋盘，
+即可在纯网页里求解并逐步回放沙盘。识别与安全点击仍只在桌面端。
+
+```powershell
+npm ci
+npm run check:solver   # tsc 类型检查
+npm run test:solver    # node 直接运行 TS 等价测试
+npm run build:solver   # 编译到 app/js/solver/
+```
+
 ## 命令行
 
 使用已有截图：
@@ -102,10 +117,15 @@ scripts/
   tools/                 独立维护工具：cache_admin / recognition_regression
 tests/                   pytest 测试与 conftest（负责 scripts/ 导入路径）
 data/                    运行产物与持久配置（路径常量集中在 scripts/paths.py）
+web/
+  solver/                求解引擎 TypeScript 源码：types / board / heuristics /
+                         closure / strategies / planner / worker
 app/
   index.html             双模式语义结构
+  solve.html             网页求解演示（Worker 求解 + 沙盘回放）
   js/                    按加载顺序拆分：core → mode → jobs → panels → board →
                          quick_review → editor → calibration → review_canvas → main
+    solver/              web/solver 的编译产物（tsc，提交入库）
   css/                   desktop / shared / mobile 三层样式
 ```
 

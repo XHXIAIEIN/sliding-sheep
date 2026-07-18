@@ -1,0 +1,13 @@
+{
+  "name": "sliding-sheep",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build:solver": "tsc -p web/solver",
+    "check:solver": "tsc -p web/solver --noEmit",
+    "test:solver": "node --test tests/js/solver.test.ts"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

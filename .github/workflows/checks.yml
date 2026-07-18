@@ -22,3 +22,21 @@ jobs:
         run: |
           Get-ChildItem app/js -Filter *.js | ForEach-Object { node --check $_.FullName }
           node -e 'const fs=require("fs");const h=fs.readFileSync("app/index.html","utf8");for(const b of h.matchAll(/<script>([\s\S]*?)<\/script>/g))new Function(b[1]);'
+
+  solver-ts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - name: Type-check solver
+        run: npx tsc -p web/solver --noEmit
+      - name: Behavioural tests (node runs TypeScript directly)
+        run: node --test tests/js/solver.test.ts
+      - name: Compiled worker bundle is up to date
+        run: |
+          npx tsc -p web/solver
+          git diff --exit-code -- app/js/solver
