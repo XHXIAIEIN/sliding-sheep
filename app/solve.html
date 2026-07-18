@@ -136,14 +136,11 @@
     & li:last-child { border-bottom: 0; }
   }
   #steps {
-    margin: 0;
-    padding: 0;
-    list-style: none;
     max-height: 420px;
     overflow-y: auto;
     font-size: 13px;
 
-    & li {
+    & .step-row {
       display: flex;
       gap: 8px;
       align-items: baseline;
@@ -158,6 +155,34 @@
         background: color-mix(in oklch, var(--accent), transparent 85%);
         font-weight: 650;
       }
+      /* 直接离场的步骤没有决策含量，弱化显示。 */
+      &.exit { color: var(--muted); }
+    }
+
+    & details.exit-group {
+      & summary {
+        display: flex;
+        gap: 8px;
+        align-items: baseline;
+        padding: 5px 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 12px;
+
+        & .n { font-size: 11px; min-width: 2.2em; }
+        & .ids {
+          margin-left: auto;
+          font-size: 11px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          max-width: 45%;
+        }
+        &:hover { background: color-mix(in oklch, var(--accent), transparent 92%); }
+      }
+      & .step-row { margin-inline-start: 14px; }
+      &:has([aria-current="step"]) > summary { color: var(--text); }
     }
   }
   .playback {
@@ -262,7 +287,7 @@
       <h2>算法过程</h2>
       <ol id="process"></ol>
       <h2>步骤</h2>
-      <ol id="steps"></ol>
+      <div id="steps"></div>
     </section>
   </main>
 </div>
@@ -359,6 +384,44 @@ function boardAt(index) {
   return state.boards[index];
 }
 
+function stepRow(step, index) {
+  const row = document.createElement("div");
+  row.className = `step-row${step.result === "EXIT" ? " exit" : ""}`;
+  row.dataset.step = index;
+  row.innerHTML = `<span class="n">${index + 1}</span>
+    #${step.pieceId} ${ARROWS[step.direction]} ${
+      step.result === "EXIT" ? "离场" : `${step.distance} 格`}
+    <span class="phase">${step.phase === "coarse" ? "直出" : "搜索"}</span>`;
+  row.addEventListener("click", () => showStep(index));
+  return row;
+}
+
+function renderSteps(steps) {
+  // 连续的直接离场步骤没有决策含量：折叠成组，保持列表聚焦在关键步上。
+  const frag = document.createDocumentFragment();
+  let i = 0;
+  while (i < steps.length) {
+    let j = i;
+    while (j < steps.length && steps[j].result === "EXIT") j += 1;
+    if (j - i >= 2) {
+      const ids = steps.slice(i, j).map((s) => `#${s.pieceId}`);
+      const details = document.createElement("details");
+      details.className = "exit-group";
+      const summary = document.createElement("summary");
+      summary.innerHTML = `<span class="n">${i + 1}–${j}</span>
+        直接离场 ×${j - i}<span class="ids">${ids.join(" ")}</span>`;
+      details.append(summary);
+      for (let k = i; k < j; k++) details.append(stepRow(steps[k], k));
+      frag.append(details);
+      i = j;
+    } else {
+      frag.append(stepRow(steps[i], i));
+      i += 1;
+    }
+  }
+  ui.steps.replaceChildren(frag);
+}
+
 function showStep(index) {
   // index = 已执行的步数；棋盘显示执行前局面，高亮即将点击的羊。
   state.index = index;
@@ -369,11 +432,13 @@ function showStep(index) {
     ? `第 ${index + 1} 步 · 点 #${next.pieceId} ${ARROWS[next.direction]}${
         next.result === "EXIT" ? " 离场" : ` ${next.distance} 格`}`
     : state.steps.length ? "全部步骤执行完毕" : "初始局面";
-  for (const li of ui.steps.children) {
-    if (Number(li.dataset.step) === index) {
-      li.setAttribute("aria-current", "step");
-      li.scrollIntoView({ block: "nearest" });
-    } else li.removeAttribute("aria-current");
+  for (const row of ui.steps.querySelectorAll(".step-row")) {
+    if (Number(row.dataset.step) === index) {
+      row.setAttribute("aria-current", "step");
+      const group = row.closest("details");
+      if (group) group.open = true;
+      row.scrollIntoView({ block: "nearest" });
+    } else row.removeAttribute("aria-current");
   }
 }
 
@@ -420,16 +485,7 @@ ui.solve.addEventListener("click", () => {
     state.steps = msg.steps;
     state.boards = [Board.from(state.data)];
     ui.slider.max = msg.steps.length;
-    ui.steps.replaceChildren(...msg.steps.map((step, i) => {
-      const li = document.createElement("li");
-      li.dataset.step = i;
-      li.innerHTML = `<span class="n">${i + 1}</span>
-        #${step.pieceId} ${ARROWS[step.direction]} ${
-          step.result === "EXIT" ? "离场" : `${step.distance} 格`}
-        <span class="phase">${step.phase === "coarse" ? "直出" : "搜索"}</span>`;
-      li.addEventListener("click", () => showStep(i));
-      return li;
-    }));
+    renderSteps(msg.steps);
     finishSolve(`<b class="kind${msg.solved ? " solved" : ""}">${msg.kind}</b>
       <span>${msg.steps.length} 步</span>
       ${msg.solved ? '<span class="solved">完整解</span>'
