@@ -125,8 +125,8 @@ summary { cursor: pointer; color: #4b554f; font-size: 12px; font-weight: 700; }
 .quick-review-head span { min-width: 0; overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
 .quick-review-head span.saving { color: var(--accent); }
 .quick-review-head span.modified { color: var(--amber); font-weight: 650; }
-.quick-review-controls { min-width: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; overflow-x: auto; scrollbar-width: thin; }
-.quick-piece-controls { min-width: 0; display: flex; align-items: center; gap: 5px; padding: 3px; border: 1px solid #dce3df; border-radius: 8px; background: #fff; }
+.quick-review-controls { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 8px; }
+.quick-piece-controls { flex: 0 0 auto; display: flex; align-items: center; gap: 5px; padding: 3px; border: 1px solid #dce3df; border-radius: 8px; background: #fff; }
 .quick-piece-controls[hidden], .quick-action-group button[hidden] { display: none; }
 .quick-piece-label { flex: 0 0 auto; padding: 4px 7px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-size: 9px; font-weight: 750; white-space: nowrap; }
 .quick-species-editor { display: flex; align-items: center; gap: 5px; color: #59645e; font-size: 9px; font-weight: 700; white-space: nowrap; }
