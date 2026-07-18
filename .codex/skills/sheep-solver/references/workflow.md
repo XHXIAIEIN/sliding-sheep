@@ -7,7 +7,7 @@ Keep source directories and hand-maintained configuration in the repo:
 - `app/index.html`, `app/grid_tuner.html`
 - `scripts/app.py`, `scripts/board_grid.py`, `scripts/detect_occupancy.py`, `scripts/board_io.py`
 - `scripts/solver.py`, `scripts/solver_search.py`, `scripts/solve_board.py`, `scripts/run.py`, `scripts/capture_window.py`
-- `scripts/test_solver.py`, `README.md`
+- `tests/test_solver.py`, `README.md`
 - `grid_params.json`
 - `reference/`
 
@@ -40,8 +40,8 @@ python scripts/run.py --capture
 Compile and smoke test:
 
 ```powershell
-python -m py_compile scripts/app.py scripts/board_grid.py scripts/board_io.py scripts/capture_window.py scripts/detect_occupancy.py scripts/run.py scripts/solve_board.py scripts/solver.py scripts/solver_search.py scripts/test_solver.py
-python scripts/test_solver.py
+python -m compileall -q scripts
+python -m pytest -q tests/test_solver.py
 ```
 
 Stop the GUI if direct scripts are preferred:

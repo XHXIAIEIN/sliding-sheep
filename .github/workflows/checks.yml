@@ -15,12 +15,10 @@ jobs:
           cache: pip
       - run: python -m pip install -r requirements-lock.txt
       - name: Compile Python sources
+        run: python -m compileall -q scripts
+      - run: python -m pytest -q tests/test_solver.py tests/test_safety.py
+      - name: Check frontend JavaScript syntax
         shell: pwsh
         run: |
-          $files = Get-ChildItem scripts -Filter *.py | ForEach-Object FullName
-          python -m py_compile $files
-      - run: python scripts/test_solver.py
-      - run: python scripts/test_safety.py
-      - name: Check inline frontend JavaScript
-        shell: pwsh
-        run: node -e 'const fs=require("fs");const h=fs.readFileSync("app/index.html","utf8");for(const b of h.matchAll(/<script>([\s\S]*?)<\/script>/g))new Function(b[1]);'
+          Get-ChildItem app/js -Filter *.js | ForEach-Object { node --check $_.FullName }
+          node -e 'const fs=require("fs");const h=fs.readFileSync("app/index.html","utf8");for(const b of h.matchAll(/<script>([\s\S]*?)<\/script>/g))new Function(b[1]);'

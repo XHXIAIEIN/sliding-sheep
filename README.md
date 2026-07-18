@@ -59,11 +59,11 @@ python scripts/run.py --capture
   └─ reference upload
       └─ analysis_engine.py             纯分析结果 AnalysisBundle
           ├─ board_grid.py              唯一透视/网格实现
-          ├─ detect_occupancy.py        视觉候选与特殊棋子识别
-          ├─ recognition.py             融合、全局占格、学习和时序
+          ├─ vision/                    视觉候选与特殊棋子识别
+          ├─ recognition/               融合、全局占格、学习和时序
           └─ safety.py                  场景与 execution_blockers
 
-app.py
+app.py（入口，Api 由 gui/ 的 mixin 组装）
   ├─ runtime.py / OperationCoordinator  唯一后台作业、取消令牌和状态快照
   ├─ planner.py                         GUI/CLI 共用的唯一求解策略
   │   ├─ solver.py                      Board 规则模型和小盘最优 A*
@@ -74,7 +74,30 @@ app.py
   └─ 安全单步：预检 → 点击 → 重扫 → 校验 → 重求
 ```
 
-详细边界见 [docs/architecture-2026-07-15.md](docs/architecture-2026-07-15.md)。
+详细边界见 [docs/architecture-2026-07-15.md](docs/architecture-2026-07-15.md)（文中的 `detect_occupancy.py`、`recognition.py`、`app.py` 单文件已分别拆分为 `vision/`、`recognition/`、`gui/` 包，职责边界不变）。
+
+### 代码组织
+
+```text
+scripts/
+  app.py                 pywebview 入口；Api = gui/ 全部 mixin 的组合
+  gui/                   Api 按职责拆分：common / geometry / window / settings /
+                         analysis / editor / board_state / solving / workflow /
+                         execution / wolf / calibration
+  vision/                视觉识别：masks / species_sheep / species_special /
+                         hazards / segmentation / conflicts / pipeline /
+                         render / export
+  recognition/           模型层：features / fusion / manual_learning /
+                         direction_learning / temporal
+  detect_occupancy.py    识别 CLI 门面（实现在 vision/）
+  solver.py …            求解、缓存、安全等单文件模块
+tests/                   pytest 测试与 conftest（负责 scripts/ 导入路径）
+app/
+  index.html             双模式语义结构
+  js/                    按加载顺序拆分：core → mode → jobs → panels → board →
+                         quick_review → editor → calibration → review_canvas → main
+  css/                   desktop / shared / mobile 三层样式
+```
 
 ### 关键模块
 
@@ -84,10 +107,12 @@ app.py
 | `scripts/analysis_engine.py` | 把一次识别收敛成完整 `AnalysisBundle`，避免分析中途污染 GUI 状态 |
 | `scripts/planner.py` | GUI/CLI 共用求解策略；小盘最优 A*，大盘直出闭包 + macro/weighted 搜索 |
 | `scripts/solver_learning.py` | 按相似棋盘累计各策略成功率、进度和耗时；内存读取、后台写盘，不阻塞求解 |
-| `scripts/app.py` | pywebview 适配、实时窗口、人工复核、快速解法和安全执行 |
+| `scripts/app.py` + `scripts/gui/` | pywebview 适配、实时窗口、人工复核、快速解法和安全执行 |
+| `scripts/vision/` | 校正棋盘上的全部视觉检测器与调试渲染 |
+| `scripts/recognition/` | 候选融合、全局占格、人工/方向学习与时序稳定 |
 | `app/index.html` | 桌面操作与移动参考的语义结构 |
-| `app/app.js` | 一个作业轮询器、双模式投影和移动上传预处理，不拥有业务状态机 |
-| `app/app.css` | 桌面三栏与 iPhone 15 Pro Bento 截图工作台 |
+| `app/js/` | 一个作业轮询器、双模式投影和移动上传预处理，不拥有业务状态机 |
+| `app/css/` | 桌面三栏与 iPhone 15 Pro Bento 截图工作台 |
 
 ## 安全语义
 
@@ -146,7 +171,7 @@ cache/solver_strategy_learning.json
 
 ```powershell
 python -m compileall -q scripts
-node --check app/app.js
+Get-ChildItem app/js -Filter *.js | ForEach-Object { node --check $_.FullName }
 python -m pytest -q
 python scripts/detect_occupancy.py
 python scripts/solve_board.py board.json

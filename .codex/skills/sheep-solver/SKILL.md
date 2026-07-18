@@ -73,10 +73,8 @@ For more detail, read `references/workflow.md`.
 Run after detector or solver edits:
 
 ```powershell
-python -m py_compile scripts/board_grid.py scripts/detect_occupancy.py scripts/solve_board.py scripts/solver.py
-python -m py_compile scripts/solver_search.py
-python -m py_compile scripts/planner.py scripts/solver_learning.py scripts/app.py
-python scripts/test_solver.py
+python -m compileall -q scripts
+python -m pytest -q tests/test_solver.py
 python scripts/detect_occupancy.py
 python scripts/solve_board.py board.json
 ```
