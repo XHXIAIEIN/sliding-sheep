@@ -207,7 +207,17 @@
     view-transition-name: var(--vt, none);
     text-shadow: 0 1px 2px oklch(0% 0 0 / .4);
 
-    &.selected { outline: 2px solid oklch(65% 0.24 20); outline-offset: 1px; }
+    & .id { letter-spacing: .02em; }
+    & .arrow { font-size: .85em; opacity: .9; }
+
+    &.selected {
+      background: oklch(63% 0.23 25);
+      z-index: 1;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+  }
+  @keyframes pulse {
+    50% { background: oklch(74% 0.19 40); }
   }
   ::view-transition-group(*) { animation-duration: .22s; }
 }
@@ -330,8 +340,9 @@ function renderBoard(board, highlightId = null) {
       div.style.setProperty("--piece", style.color);
       div.style.setProperty("--vt", `p-${pid.replaceAll(/\W/g, "_")}`);
       div.style.gridArea = `${r0 + 1} / ${c0 + 1} / ${r1 + 2} / ${c1 + 2}`;
-      div.textContent = `${style.mark}${piece.facing ? ARROWS[piece.facing] : ""}`;
-      div.title = `#${pid} ${piece.species} ${piece.facing ?? ""}`;
+      div.innerHTML = `<span><span class="id">${pid}</span><span class="arrow">${
+        piece.facing ? ARROWS[piece.facing] : ""}</span></span>`;
+      div.title = `#${pid} ${style.mark}（${piece.species}）${piece.facing ?? ""}`;
       ui.grid.append(div);
     }
   };
@@ -349,14 +360,17 @@ function boardAt(index) {
 }
 
 function showStep(index) {
+  // index = 已执行的步数；棋盘显示执行前局面，高亮即将点击的羊。
   state.index = index;
-  const step = index > 0 ? state.steps[index - 1] : null;
-  renderBoard(boardAt(index), step?.pieceId ?? null);
+  const next = state.steps[index] ?? null;
+  renderBoard(boardAt(index), next?.pieceId ?? null);
   ui.slider.value = index;
-  ui.stepLabel.textContent = index === 0 ? "初始局面"
-    : `第 ${index} 步 · #${step.pieceId} ${ARROWS[step.direction]}${step.result === "EXIT" ? " 离场" : ` ${step.distance} 格`}`;
+  ui.stepLabel.textContent = next
+    ? `第 ${index + 1} 步 · 点 #${next.pieceId} ${ARROWS[next.direction]}${
+        next.result === "EXIT" ? " 离场" : ` ${next.distance} 格`}`
+    : state.steps.length ? "全部步骤执行完毕" : "初始局面";
   for (const li of ui.steps.children) {
-    if (Number(li.dataset.index) === index) {
+    if (Number(li.dataset.step) === index) {
       li.setAttribute("aria-current", "step");
       li.scrollIntoView({ block: "nearest" });
     } else li.removeAttribute("aria-current");
@@ -408,12 +422,12 @@ ui.solve.addEventListener("click", () => {
     ui.slider.max = msg.steps.length;
     ui.steps.replaceChildren(...msg.steps.map((step, i) => {
       const li = document.createElement("li");
-      li.dataset.index = i + 1;
+      li.dataset.step = i;
       li.innerHTML = `<span class="n">${i + 1}</span>
         #${step.pieceId} ${ARROWS[step.direction]} ${
           step.result === "EXIT" ? "离场" : `${step.distance} 格`}
         <span class="phase">${step.phase === "coarse" ? "直出" : "搜索"}</span>`;
-      li.addEventListener("click", () => showStep(i + 1));
+      li.addEventListener("click", () => showStep(i));
       return li;
     }));
     finishSolve(`<b class="kind${msg.solved ? " solved" : ""}">${msg.kind}</b>
