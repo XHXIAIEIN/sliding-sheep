@@ -7,7 +7,10 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "app" / "index.html").read_text(encoding="utf-8")
 SCRIPT = (ROOT / "app" / "app.js").read_text(encoding="utf-8")
 CSS = (ROOT / "app" / "app.css").read_text(encoding="utf-8")
-APP_PY = (ROOT / "scripts" / "app.py").read_text(encoding="utf-8")
+APP_PY = "\n".join(
+    path.read_text(encoding="utf-8")
+    for path in [ROOT / "scripts" / "app.py",
+                 *sorted((ROOT / "scripts" / "gui").glob("*.py"))])
 
 
 class _IdCollector(HTMLParser):

@@ -12,6 +12,7 @@ from types import SimpleNamespace
 import level_cache
 import numpy as np
 import app as app_module
+import gui.common as gui_common
 import recognition
 from app import Api, ExecutionReviewRequired
 from solver import Board
@@ -973,7 +974,7 @@ def test_album_upload_decodes_pixels_without_touching_window_capture(monkeypatch
 
 def test_runtime_settings_are_normalized_persisted_and_newest_write_wins(monkeypatch, tmp_path):
     settings_path = tmp_path / "runtime_settings.json"
-    monkeypatch.setattr(app_module, "RUNTIME_SETTINGS_PATH", str(settings_path))
+    monkeypatch.setattr(gui_common, "RUNTIME_SETTINGS_PATH", str(settings_path))
     api = Api()
 
     defaults = api.load_runtime_settings()
@@ -1371,13 +1372,13 @@ def test_archived_level113_app_schedule_finds_complete_plan():
 
 
 def test_save_manual_sample_persists_supervision_bundle():
-    old_here = app_module.HERE
+    old_here = gui_common.HERE
     old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
     old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
-            app_module.HERE = str(root)
+            gui_common.HERE = str(root)
             recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
             recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             api = Api()
@@ -1411,7 +1412,7 @@ def test_save_manual_sample_persists_supervision_bundle():
             learned = recognition.load_manual_learning()
             assert {item["correction"]["kind"] for item in learned} == {"add", "confirm"}, learned
     finally:
-        app_module.HERE = old_here
+        gui_common.HERE = old_here
         recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
         recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
 
@@ -1629,14 +1630,14 @@ def test_editor_grid_returns_atomic_frame_and_board_snapshot():
 
 
 def test_failed_sample_bundle_never_publishes_active_learning():
-    old_here = app_module.HERE
+    old_here = gui_common.HERE
     old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
     old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     old_imwrite = app_module.cv2.imwrite
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
-            app_module.HERE = str(root)
+            gui_common.HERE = str(root)
             recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
             recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             api = Api()
@@ -1660,20 +1661,20 @@ def test_failed_sample_bundle_never_publishes_active_learning():
             assert not recognition.manual_learning.MANUAL_LEARNING_INDEX.exists(), recognition.manual_learning.MANUAL_LEARNING_INDEX
             assert recognition.load_manual_learning() == []
     finally:
-        app_module.HERE = old_here
+        gui_common.HERE = old_here
         recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
         recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
         app_module.cv2.imwrite = old_imwrite
 
 
 def test_saving_provisional_candidate_records_second_confirmation():
-    old_here = app_module.HERE
+    old_here = gui_common.HERE
     old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
     old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
-            app_module.HERE = str(root)
+            gui_common.HERE = str(root)
             recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
             recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             piece = {"cells": [[1, 2], [2, 2]], "facing": "D", "species": "rocket"}
@@ -1697,7 +1698,7 @@ def test_saving_provisional_candidate_records_second_confirmation():
             assert len(corrections) == 1 and corrections[0]["confirmation"], corrections
             assert corrections[0]["fields"] == ["presence", "species", "facing"], corrections
     finally:
-        app_module.HERE = old_here
+        gui_common.HERE = old_here
         recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
         recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
 
