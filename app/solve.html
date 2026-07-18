@@ -171,14 +171,6 @@
         font-size: 12px;
 
         & .n { font-size: 11px; min-width: 2.2em; }
-        & .ids {
-          margin-left: auto;
-          font-size: 11px;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          max-width: 45%;
-        }
         &:hover { background: color-mix(in oklch, var(--accent), transparent 92%); }
       }
       & .step-row { margin-inline-start: 14px; }
@@ -404,12 +396,10 @@ function renderSteps(steps) {
     let j = i;
     while (j < steps.length && steps[j].result === "EXIT") j += 1;
     if (j - i >= 2) {
-      const ids = steps.slice(i, j).map((s) => `#${s.pieceId}`);
       const details = document.createElement("details");
       details.className = "exit-group";
       const summary = document.createElement("summary");
-      summary.innerHTML = `<span class="n">${i + 1}–${j}</span>
-        直接离场 ×${j - i}<span class="ids">${ids.join(" ")}</span>`;
+      summary.innerHTML = `<span class="n">${i + 1}–${j}</span>直接离场 ×${j - i}`;
       details.append(summary);
       for (let k = i; k < j; k++) details.append(stepRow(steps[k], k));
       frag.append(details);
