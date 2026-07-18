@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "coordinate_space": "normalized_window",
+  "controls": {
+    "failure_popup_close": {
+      "point": [0.92, 0.22],
+      "color": "red",
+      "region": [0.86, 0.16, 0.99, 0.30],
+      "minimum_score": 0.035
+    },
+    "failure_restart": {
+      "point": [0.82, 0.79],
+      "color": "blue",
+      "region": [0.72, 0.70, 0.94, 0.88],
+      "minimum_score": 0.07
+    },
+    "settings_open": {
+      "point": [0.12, 0.08]
+    },
+    "settings_restart": {
+      "point": [0.84, 0.69],
+      "color": "blue",
+      "region": [0.72, 0.60, 0.96, 0.78],
+      "minimum_score": 0.07
+    },
+    "victory_next": {
+      "point": [0.50, 0.875],
+      "color": "green",
+      "region": [0.31, 0.83, 0.69, 0.93],
+      "minimum_score": 0.35
+    }
+  },
+  "timing_ms": {
+    "after_close": 650,
+    "after_open_settings": 450,
+    "after_restart": 1200,
+    "after_next": 900,
+    "stabilize_interval": 350,
+    "stabilize_attempts": 8
+  },
+  "evidence": {
+    "reference_sizes": [[1086, 1976], [1037, 1889]],
+    "verified_actions": ["settings_restart", "victory_next"],
+    "note": "victory_next learned from a 1037x1889 level-114 clear screen; require victory scene plus green ROI before clicking."
+  }
+}

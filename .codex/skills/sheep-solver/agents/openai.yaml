@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sheep Solver"
+  short_description: "Run and debug the sheep puzzle solver"
+  default_prompt: "Use $sheep-solver to identify sheep directions and solve the current screenshot."
