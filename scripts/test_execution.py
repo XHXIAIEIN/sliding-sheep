@@ -1372,14 +1372,14 @@ def test_archived_level113_app_schedule_finds_complete_plan():
 
 def test_save_manual_sample_persists_supervision_bundle():
     old_here = app_module.HERE
-    old_learning_dir = recognition.MANUAL_LEARNING_DIR
-    old_learning_index = recognition.MANUAL_LEARNING_INDEX
+    old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
+    old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
             app_module.HERE = str(root)
-            recognition.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
-            recognition.MANUAL_LEARNING_INDEX = recognition.MANUAL_LEARNING_DIR / "index.jsonl"
+            recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
+            recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             api = Api()
             api.board = Board(4, 4, {
                 "0": {"cells": [(0, 0), (0, 1)], "facing": "R", "species": "sheep"},
@@ -1412,8 +1412,8 @@ def test_save_manual_sample_persists_supervision_bundle():
             assert {item["correction"]["kind"] for item in learned} == {"add", "confirm"}, learned
     finally:
         app_module.HERE = old_here
-        recognition.MANUAL_LEARNING_DIR = old_learning_dir
-        recognition.MANUAL_LEARNING_INDEX = old_learning_index
+        recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
+        recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
 
 
 def test_unconfirmed_board_edit_does_not_publish_direction_learning():
@@ -1630,15 +1630,15 @@ def test_editor_grid_returns_atomic_frame_and_board_snapshot():
 
 def test_failed_sample_bundle_never_publishes_active_learning():
     old_here = app_module.HERE
-    old_learning_dir = recognition.MANUAL_LEARNING_DIR
-    old_learning_index = recognition.MANUAL_LEARNING_INDEX
+    old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
+    old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     old_imwrite = app_module.cv2.imwrite
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
             app_module.HERE = str(root)
-            recognition.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
-            recognition.MANUAL_LEARNING_INDEX = recognition.MANUAL_LEARNING_DIR / "index.jsonl"
+            recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
+            recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             api = Api()
             api.board = Board(4, 4, {
                 "0": {"cells": [(0, 0), (0, 1)], "facing": "R", "species": "sheep"},
@@ -1657,25 +1657,25 @@ def test_failed_sample_bundle_never_publishes_active_learning():
             app_module.cv2.imwrite = lambda *_args, **_kwargs: False
             result = api.save_manual_sample("must-fail")
             assert not result["ok"], result
-            assert not recognition.MANUAL_LEARNING_INDEX.exists(), recognition.MANUAL_LEARNING_INDEX
+            assert not recognition.manual_learning.MANUAL_LEARNING_INDEX.exists(), recognition.manual_learning.MANUAL_LEARNING_INDEX
             assert recognition.load_manual_learning() == []
     finally:
         app_module.HERE = old_here
-        recognition.MANUAL_LEARNING_DIR = old_learning_dir
-        recognition.MANUAL_LEARNING_INDEX = old_learning_index
+        recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
+        recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
         app_module.cv2.imwrite = old_imwrite
 
 
 def test_saving_provisional_candidate_records_second_confirmation():
     old_here = app_module.HERE
-    old_learning_dir = recognition.MANUAL_LEARNING_DIR
-    old_learning_index = recognition.MANUAL_LEARNING_INDEX
+    old_learning_dir = recognition.manual_learning.MANUAL_LEARNING_DIR
+    old_learning_index = recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with TemporaryDirectory() as temp:
             root = Path(temp)
             app_module.HERE = str(root)
-            recognition.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
-            recognition.MANUAL_LEARNING_INDEX = recognition.MANUAL_LEARNING_DIR / "index.jsonl"
+            recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
+            recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             piece = {"cells": [[1, 2], [2, 2]], "facing": "D", "species": "rocket"}
             board_data = {"rows": 4, "cols": 4, "model": "facing", "slide_mode": "all",
                           "hazards": [], "fences": [], "returning": {},
@@ -1698,8 +1698,8 @@ def test_saving_provisional_candidate_records_second_confirmation():
             assert corrections[0]["fields"] == ["presence", "species", "facing"], corrections
     finally:
         app_module.HERE = old_here
-        recognition.MANUAL_LEARNING_DIR = old_learning_dir
-        recognition.MANUAL_LEARNING_INDEX = old_learning_index
+        recognition.manual_learning.MANUAL_LEARNING_DIR = old_learning_dir
+        recognition.manual_learning.MANUAL_LEARNING_INDEX = old_learning_index
 
 
 def test_runtime_frames_do_not_promote_single_sample_learning():

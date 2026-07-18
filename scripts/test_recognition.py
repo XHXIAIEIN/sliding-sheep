@@ -432,11 +432,11 @@ def test_board_corrections_detects_added_level113_rocket():
 
 
 def test_manual_learning_index_round_trip_and_deduplicates():
-    old_dir, old_index = recognition.MANUAL_LEARNING_DIR, recognition.MANUAL_LEARNING_INDEX
+    old_dir, old_index = recognition.manual_learning.MANUAL_LEARNING_DIR, recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with tempfile.TemporaryDirectory() as folder:
-            recognition.MANUAL_LEARNING_DIR = Path(folder)
-            recognition.MANUAL_LEARNING_INDEX = Path(folder) / "index.jsonl"
+            recognition.manual_learning.MANUAL_LEARNING_DIR = Path(folder)
+            recognition.manual_learning.MANUAL_LEARNING_INDEX = Path(folder) / "index.jsonl"
             record = {
                 "schema": recognition.MANUAL_LEARNING_SCHEMA,
                 "sample_id": "round-trip", "status": "active",
@@ -461,15 +461,15 @@ def test_manual_learning_index_round_trip_and_deduplicates():
             malformed["observation_hash"] = "observation-b"
             malformed["evidence"] = {"bad": {1, 2, 3}}
             quarantined = recognition.record_manual_learning([malformed])
-            with open(recognition.MANUAL_LEARNING_INDEX, "a", encoding="utf-8") as stream:
+            with open(recognition.manual_learning.MANUAL_LEARNING_INDEX, "a", encoding="utf-8") as stream:
                 stream.write('{"schema":"bad"}\n[]\nnot-json\n')
             loaded = recognition.load_manual_learning()
             assert first["recorded"] == 1 and second["duplicates"] == 1, (first, second)
             assert quarantined["recorded"] == 0 and quarantined["quarantined"] == 1, quarantined
             assert len(loaded) == 1 and loaded[0]["sample_id"] == "round-trip", loaded
     finally:
-        recognition.MANUAL_LEARNING_DIR = old_dir
-        recognition.MANUAL_LEARNING_INDEX = old_index
+        recognition.manual_learning.MANUAL_LEARNING_DIR = old_dir
+        recognition.manual_learning.MANUAL_LEARNING_INDEX = old_index
 
 
 def test_manual_template_proposes_missing_level113_rocket_for_review():
@@ -660,12 +660,12 @@ def test_saved_bomb_template_can_recover_a_corrected_footprint():
 
 
 def test_saved_manual_bundle_supplies_unchanged_confirmations_without_index():
-    old_dir, old_index = recognition.MANUAL_LEARNING_DIR, recognition.MANUAL_LEARNING_INDEX
+    old_dir, old_index = recognition.manual_learning.MANUAL_LEARNING_DIR, recognition.manual_learning.MANUAL_LEARNING_INDEX
     try:
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            recognition.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
-            recognition.MANUAL_LEARNING_INDEX = recognition.MANUAL_LEARNING_DIR / "index.jsonl"
+            recognition.manual_learning.MANUAL_LEARNING_DIR = root / "cache" / "recognition_learning"
+            recognition.manual_learning.MANUAL_LEARNING_INDEX = recognition.manual_learning.MANUAL_LEARNING_DIR / "index.jsonl"
             folder = root / "cache" / "manual_samples" / "20260716-173000-000"
             folder.mkdir(parents=True)
             piece = {"cells": [[1, 1], [2, 1]], "species": "bomb", "facing": "D",
@@ -687,8 +687,8 @@ def test_saved_manual_bundle_supplies_unchanged_confirmations_without_index():
             correction = samples[0]["correction"]
             assert correction["kind"] == "confirm" and correction["after"]["species"] == "bomb"
     finally:
-        recognition.MANUAL_LEARNING_DIR = old_dir
-        recognition.MANUAL_LEARNING_INDEX = old_index
+        recognition.manual_learning.MANUAL_LEARNING_DIR = old_dir
+        recognition.manual_learning.MANUAL_LEARNING_INDEX = old_index
 
 
 def test_level173_saved_board_is_reproduced_by_automatic_learning():
