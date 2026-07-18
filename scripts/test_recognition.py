@@ -10,7 +10,7 @@ import tempfile
 
 import board_grid as G
 import recognition
-import detect_occupancy as D
+import vision as D
 
 
 def candidate(source, cells, facing, score, detector="body", species="sheep"):
@@ -42,7 +42,7 @@ def test_tutorial_hand_recovers_only_unique_red_target_arrow(monkeypatch):
     body = np.zeros(rect.shape[:2], dtype=np.uint8)
     hidden = candidate(71, [(14, 10), (15, 10)], "D", 1895, detector="arrow")
     hidden.update({"area": 377, "center_rect": [692.98, 932.7]})
-    monkeypatch.setattr(D, "_arrow_candidates", lambda *_args, **_kwargs: [hidden])
+    monkeypatch.setattr(D.segmentation, "_arrow_candidates", lambda *_args, **_kwargs: [hidden])
     gesture = {
         "affected_cells": [[14, 10], [15, 10], [15, 11]],
         "components": [{

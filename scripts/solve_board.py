@@ -8,7 +8,7 @@ import board_io
 import level_cache
 import planner
 from solver import Move
-import detect_occupancy as D
+import vision as D
 from paths import image_path
 
 

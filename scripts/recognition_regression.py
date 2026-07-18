@@ -14,7 +14,7 @@ from pathlib import Path
 import cv2
 
 import board_grid as G
-import detect_occupancy as D
+import vision as D
 import safety
 from paths import ROOT
 

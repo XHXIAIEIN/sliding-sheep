@@ -28,7 +28,7 @@ import webview
 import board_grid as G
 import board_io
 import analysis_engine
-import detect_occupancy as D
+import vision as D
 import level_cache
 import level_reader
 import planner

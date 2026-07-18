@@ -27,8 +27,8 @@ def main():
         print("== 1/3 截图 == 跳过(用现有 images/_game.png)")
 
     print("== 2/3 识别 ==")
-    import detect_occupancy
-    detect_occupancy.main([])
+    import vision
+    vision.main([])
 
     print("== 3/3 求解 ==")
     import solve_board

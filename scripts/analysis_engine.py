@@ -13,7 +13,7 @@ import numpy as np
 
 import board_grid
 import board_io
-import detect_occupancy as detector
+import vision as detector
 import safety
 
 

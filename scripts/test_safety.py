@@ -11,7 +11,7 @@ import numpy as np
 
 import board_grid as G
 import board_io
-import detect_occupancy as D
+import vision as D
 import level_cache
 import safety
 from paths import ROOT
