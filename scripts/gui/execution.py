@@ -8,12 +8,12 @@ from copy import deepcopy
 from ctypes import wintypes
 import cv2
 import numpy as np
-import board_grid as G
-import board_io
+from board import grid as G
+from board import io as board_io
 import vision as D
-import level_cache
-import runtime as app_runtime
-from capture_window import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
+from levels import cache as level_cache
+from core import runtime as app_runtime
+from core.capture import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
 from paths import image_path
 from . import common
 from .common import ExecutionReviewRequired, MOUSEEVENTF_LEFTDOWN, TITLE, _load_params, _wrap, user32

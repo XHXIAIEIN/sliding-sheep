@@ -3,10 +3,10 @@ import json
 from pathlib import Path
 
 from solver import Board, solve
-import board_io
-import planner
-from board_io import render, describe
-from solver_search import (analyze as search_analyze, beam_solve,
+from board import io as board_io
+from solver import planner
+from board.io import render, describe
+from solver.search import (analyze as search_analyze, beam_solve,
                            forced_exit_closure, search_solve,
                            randomized_macro_solve,
                            structural_deadlocks, supports_forced_exit_closure,
@@ -455,7 +455,7 @@ def test_archived_level113_macro_beam_solves():
 
 def test_terminal_deadlock_is_ranked_behind_live_state():
     """A smaller frozen remainder must not beat a larger recoverable state."""
-    from solver_search import _heuristic, _rank, analyze
+    from solver.search import _heuristic, _rank, analyze
 
     dead = Board(2, 4, {
         "left": {"cells": [[0, 0], [0, 1]], "facing": "R"},

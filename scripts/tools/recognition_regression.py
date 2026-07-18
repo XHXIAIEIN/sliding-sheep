@@ -7,15 +7,20 @@ opened beside their cached overlays and approved manually.
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import json
 from pathlib import Path
 
 import cv2
 
-import board_grid as G
+from board import grid as G
 import vision as D
-import safety
+from core import safety
 from paths import ROOT
 
 

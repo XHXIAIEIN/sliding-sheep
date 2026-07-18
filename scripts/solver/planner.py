@@ -5,8 +5,8 @@ from dataclasses import dataclass
 import time
 from typing import Callable
 
-from solver import Board, Move, greedy_solve, solve as exact_solve
-from solver_search import (beam_solve, randomized_macro_solve,
+from .model import Board, Move, greedy_solve, solve as exact_solve
+from .search import (beam_solve, randomized_macro_solve,
                            forced_exit_candidates, forced_exit_sort_key,
                            structural_deadlocks, supports_forced_exit_closure,
                            weighted_astar_solve)

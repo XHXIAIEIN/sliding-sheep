@@ -1,11 +1,11 @@
 
 import time
 from copy import deepcopy
-import board_io
-import level_cache
-import planner
-import runtime as app_runtime
-import solver_learning
+from board import io as board_io
+from levels import cache as level_cache
+from solver import planner
+from core import runtime as app_runtime
+from solver import learning as solver_learning
 from solver import DIRS, Move
 from .common import DEFAULT_SOLVE_TIMEOUT, _safe_error, _wrap
 

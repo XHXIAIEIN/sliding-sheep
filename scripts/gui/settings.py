@@ -1,6 +1,6 @@
 
 import os
-import level_cache
+from levels import cache as level_cache
 from . import common
 from .common import _RUNTIME_SETTINGS_LOCK, _empty_scene_report, _normalize_runtime_settings, _read_runtime_settings, _wrap, _write_json_atomic
 

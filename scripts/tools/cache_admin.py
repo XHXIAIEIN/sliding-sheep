@@ -1,18 +1,23 @@
 """Inspect, verify, export, and safely prune the level cache.
 
 Pruning is dry-run by default and refuses to delete anything outside
-cache/levels.  Run ``python scripts/cache_admin.py --help`` for commands.
+cache/levels.  Run ``python scripts/tools/cache_admin.py --help`` for commands.
 """
 from __future__ import annotations
 
 import argparse
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
 import json
 import shutil
 import zipfile
 from collections import defaultdict
 from pathlib import Path
 
-import level_cache
+from levels import cache as level_cache
 from paths import ROOT
 
 

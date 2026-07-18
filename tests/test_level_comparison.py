@@ -8,7 +8,7 @@ import cv2
 import numpy as np
 
 import app as app_module
-import level_cache
+from levels import cache as level_cache
 
 
 def board(*pieces):

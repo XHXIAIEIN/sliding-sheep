@@ -8,7 +8,7 @@ from copy import deepcopy
 from pathlib import Path
 import tempfile
 
-import board_grid as G
+from board import grid as G
 import recognition
 import vision as D
 

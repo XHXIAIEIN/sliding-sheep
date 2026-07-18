@@ -15,7 +15,7 @@ def main():
 
     if args.capture:
         print("== 1/3 截图 ==")
-        from capture_window import find_window, grab
+        from core.capture import find_window, grab
         hwnd = find_window(args.title)
         if not hwnd:
             raise SystemExit(f"找不到窗口: {args.title}")

@@ -3,7 +3,7 @@ from pathlib import Path
 
 import cv2
 
-import level_reader
+from levels import reader as level_reader
 
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import cv2
 import numpy as np
-import board_grid as G
+from board import grid as G
 from paths import image_path
 from .masks import CELL, _warp
 

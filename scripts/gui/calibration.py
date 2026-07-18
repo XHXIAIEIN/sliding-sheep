@@ -4,8 +4,8 @@ import json
 import base64
 import cv2
 import numpy as np
-import board_grid as G
-import safety
+from board import grid as G
+from core import safety
 from . import common
 from .common import _wrap
 

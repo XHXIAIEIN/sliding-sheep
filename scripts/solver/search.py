@@ -10,7 +10,7 @@ import heapq
 import random
 import time
 
-from solver import Board, DIRS, Move, greedy_solve, solve as exact_solve
+from .model import Board, DIRS, Move, greedy_solve, solve as exact_solve
 
 
 def _shift(cells, direction):

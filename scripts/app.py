@@ -18,10 +18,10 @@ from collections import deque
 import cv2  # noqa: F401  测试通过 app.cv2 打桩截图写盘
 import webview
 
-import level_reader  # noqa: F401  测试通过 app.level_reader 打桩关卡读取
-import planner  # noqa: F401  测试通过 app.planner 打桩求解
-import runtime as app_runtime
-import solver_learning  # noqa: F401  测试通过 app.solver_learning 打桩策略画像
+from levels import reader as level_reader  # noqa: F401  测试通过 app.level_reader 打桩关卡读取
+from solver import planner  # noqa: F401  测试通过 app.planner 打桩求解
+from core import runtime as app_runtime
+from solver import learning as solver_learning  # noqa: F401  测试通过 app.solver_learning 打桩策略画像
 from gui import (  # noqa: F401  ExecutionReviewRequired/_wrap 为兼容旧引用保留
     AnalysisOps,
     BoardStateOps,

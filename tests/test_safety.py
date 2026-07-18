@@ -9,11 +9,11 @@ import tempfile
 import cv2
 import numpy as np
 
-import board_grid as G
-import board_io
+from board import grid as G
+from board import io as board_io
 import vision as D
-import level_cache
-import safety
+from levels import cache as level_cache
+from core import safety
 from paths import ROOT
 
 

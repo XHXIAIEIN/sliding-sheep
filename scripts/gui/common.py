@@ -6,7 +6,7 @@ import time
 import threading
 import ctypes
 import traceback
-import safety
+from core import safety
 from paths import ROOT
 
 

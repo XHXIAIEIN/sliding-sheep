@@ -55,20 +55,20 @@ python scripts/run.py --capture
 
 ```text
 游戏窗口 / 相册截图
-  ├─ capture_window.py
+  ├─ core/capture.py
   └─ reference upload
-      └─ analysis_engine.py             纯分析结果 AnalysisBundle
-          ├─ board_grid.py              唯一透视/网格实现
+      └─ core/analysis.py               纯分析结果 AnalysisBundle
+          ├─ board/grid.py              唯一透视/网格实现
           ├─ vision/                    视觉候选与特殊棋子识别
           ├─ recognition/               融合、全局占格、学习和时序
-          └─ safety.py                  场景与 execution_blockers
+          └─ core/safety.py             场景与 execution_blockers
 
 app.py（入口，Api 由 gui/ 的 mixin 组装）
-  ├─ runtime.py / OperationCoordinator  唯一后台作业、取消令牌和状态快照
-  ├─ planner.py                         GUI/CLI 共用的唯一求解策略
-  │   ├─ solver.py                      Board 规则模型和小盘最优 A*
-  │   └─ solver_search.py               大盘 macro beam / weighted A*
-  ├─ solver_learning.py                 静默增量策略画像与后台持久化
+  ├─ core/runtime.py OperationCoordinator  唯一后台作业、取消令牌和状态快照
+  ├─ solver/planner.py                  GUI/CLI 共用的唯一求解策略
+  │   ├─ solver/model.py                Board 规则模型和小盘最优 A*
+  │   └─ solver/search.py               大盘 macro beam / weighted A*
+  ├─ solver/learning.py                 静默增量策略画像与后台持久化
   ├─ 开局粗解：普通羊 EXIT 闭包 → 自适应快点 → 一次最终核验
   ├─ 快速解法：复用当前棋盘 → 最多三层普通羊 EXIT → 一次最终核验
   └─ 安全单步：预检 → 点击 → 重扫 → 校验 → 重求
@@ -81,6 +81,10 @@ app.py（入口，Api 由 gui/ 的 mixin 组装）
 ```text
 scripts/
   app.py                 pywebview 入口；Api = gui/ 全部 mixin 的组合
+  run.py                 采集 + 识别 CLI 快捷入口
+  solve_board.py         求解 CLI 入口
+  detect_occupancy.py    识别 CLI 门面（实现在 vision/）
+  paths.py               共享项目路径
   gui/                   Api 按职责拆分：common / geometry / window / settings /
                          analysis / editor / board_state / solving / workflow /
                          execution / wolf / calibration
@@ -91,8 +95,11 @@ scripts/
                          wolf / fence
   recognition/           模型层：features / fusion / manual_learning /
                          direction_learning / temporal
-  detect_occupancy.py    识别 CLI 门面（实现在 vision/）
-  solver.py …            求解、缓存、安全等单文件模块
+  solver/                求解域：model / search / planner / learning
+  board/                 棋盘域：grid（透视网格）/ io（棋盘序列化）
+  levels/                关卡域：cache（关卡缓存）/ reader（历史关卡读取）
+  core/                  核心层：runtime / safety / analysis / capture
+  tools/                 独立维护工具：cache_admin / recognition_regression
 tests/                   pytest 测试与 conftest（负责 scripts/ 导入路径）
 app/
   index.html             双模式语义结构
@@ -105,10 +112,10 @@ app/
 
 | 文件 | 职责 |
 |---|---|
-| `scripts/runtime.py` | 单后台作业、阶段、进度、暂停令牌、只读快照 |
-| `scripts/analysis_engine.py` | 把一次识别收敛成完整 `AnalysisBundle`，避免分析中途污染 GUI 状态 |
-| `scripts/planner.py` | GUI/CLI 共用求解策略；小盘最优 A*，大盘直出闭包 + macro/weighted 搜索 |
-| `scripts/solver_learning.py` | 按相似棋盘累计各策略成功率、进度和耗时；内存读取、后台写盘，不阻塞求解 |
+| `scripts/core/runtime.py` | 单后台作业、阶段、进度、暂停令牌、只读快照 |
+| `scripts/core/analysis.py` | 把一次识别收敛成完整 `AnalysisBundle`，避免分析中途污染 GUI 状态 |
+| `scripts/solver/planner.py` | GUI/CLI 共用求解策略；小盘最优 A*，大盘直出闭包 + macro/weighted 搜索 |
+| `scripts/solver/learning.py` | 按相似棋盘累计各策略成功率、进度和耗时；内存读取、后台写盘，不阻塞求解 |
 | `scripts/app.py` + `scripts/gui/` | pywebview 适配、实时窗口、人工复核、快速解法和安全执行 |
 | `scripts/vision/` | 校正棋盘上的全部视觉检测器与调试渲染 |
 | `scripts/recognition/` | 候选融合、全局占格、人工/方向学习与时序稳定 |
@@ -125,7 +132,7 @@ app/
 - `manual_learning_confirmation_required`（单样本学习候选）仍是硬阻断，不能靠连续观察自动放行。
 - 求解策略学习与识别安全门禁完全分离：它只静默调整后续搜索顺序和时间配比，不弹提示、不要求确认、不会授权或阻止点击。
 - `hard_refresh` 清理当前截图、棋盘和诊断产物，但保留 `grid_params.json`、识别学习和历史缓存。
-- 校准数据由 `grid_params.json` 持久保存；透视计算只存在于 `board_grid.py`。
+- 校准数据由 `grid_params.json` 持久保存；透视计算只存在于 `board/grid.py`。
 
 ## 人工复核
 

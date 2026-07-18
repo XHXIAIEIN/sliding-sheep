@@ -4,8 +4,8 @@ import time
 from copy import deepcopy
 import cv2
 import numpy as np
-import planner
-import runtime as app_runtime
+from solver import planner
+from core import runtime as app_runtime
 from paths import image_path
 from .common import _wrap
 

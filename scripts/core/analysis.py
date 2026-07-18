@@ -11,10 +11,10 @@ from typing import Any
 
 import numpy as np
 
-import board_grid
-import board_io
+from board import grid as board_grid
+from board import io as board_io
 import vision as detector
-import safety
+from core import safety
 
 
 @dataclass(frozen=True)

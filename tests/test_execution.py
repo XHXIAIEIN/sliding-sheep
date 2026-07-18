@@ -9,7 +9,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import SimpleNamespace
 
-import level_cache
+from levels import cache as level_cache
 import numpy as np
 import app as app_module
 import gui.common as gui_common

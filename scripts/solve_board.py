@@ -4,9 +4,9 @@
 """
 import sys
 import cv2, numpy as np
-import board_io
-import level_cache
-import planner
+from board import io as board_io
+from levels import cache as level_cache
+from solver import planner
 from solver import Move
 import vision as D
 from paths import image_path

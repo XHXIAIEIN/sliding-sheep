@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 import cv2
 import numpy as np
-import board_grid as G
-import level_cache
-import safety
-import board_io
+from board import grid as G
+from levels import cache as level_cache
+from core import safety
+from board import io as board_io
 import recognition
 from paths import image_path
 from .conflicts import (apply_species_anchors, reject_departing_edge_pieces,

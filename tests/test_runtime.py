@@ -6,10 +6,10 @@ import time
 import numpy as np
 import pytest
 
-import analysis_engine
-import planner
-import runtime
-import solver_learning
+from core import analysis as analysis_engine
+from solver import planner
+from core import runtime
+from solver import learning as solver_learning
 from solver import Board
 
 

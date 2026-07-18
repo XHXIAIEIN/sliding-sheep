@@ -4,7 +4,7 @@ import json
 import threading
 import ctypes
 from ctypes import wintypes
-from capture_window import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
+from core.capture import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
 from .common import DESKTOP_WINDOW_SIZE, HOTKEYS, MIN_WINDOW_SIZE, MOD_NOREPEAT, REFERENCE_WINDOW_SIZE, TITLE, WM_HOTKEY, _wrap, kernel32, user32
 
 

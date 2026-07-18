@@ -5,14 +5,14 @@ import base64
 from copy import deepcopy
 import cv2
 import numpy as np
-import board_grid as G
-import board_io
-import analysis_engine
+from board import grid as G
+from board import io as board_io
+from core import analysis as analysis_engine
 import vision as D
-import level_cache
-import level_reader
-import safety
-from capture_window import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
+from levels import cache as level_cache
+from levels import reader as level_reader
+from core import safety
+from core.capture import find_window, grab, list_windows  # 注：import 时已 SetProcessDPIAware
 from paths import image_path
 from . import common
 from .common import TITLE, _wrap

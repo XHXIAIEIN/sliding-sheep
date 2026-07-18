@@ -5,9 +5,9 @@ import time
 from copy import deepcopy
 import cv2
 import numpy as np
-import board_io
+from board import io as board_io
 import vision as D
-import level_cache
+from levels import cache as level_cache
 import recognition
 from solver import DIRS, Move
 from paths import image_path
