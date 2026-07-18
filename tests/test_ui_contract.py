@@ -5,8 +5,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 HTML = (ROOT / "app" / "index.html").read_text(encoding="utf-8")
-SCRIPT = (ROOT / "app" / "app.js").read_text(encoding="utf-8")
-CSS = (ROOT / "app" / "app.css").read_text(encoding="utf-8")
+# 前端按加载顺序拆分在 app/js/ 与 app/css/；契约断言面向拼接后的整体文本。
+_JS_LOAD_ORDER = ["core.js", "mode.js", "jobs.js", "panels.js", "board.js",
+                  "quick_review.js", "editor.js", "calibration.js",
+                  "review_canvas.js", "main.js"]
+SCRIPT = "\n".join((ROOT / "app" / "js" / name).read_text(encoding="utf-8")
+                   for name in _JS_LOAD_ORDER)
+CSS = "\n".join(path.read_text(encoding="utf-8")
+                for path in sorted((ROOT / "app" / "css").glob("*.css")))
 APP_PY = "\n".join(
     path.read_text(encoding="utf-8")
     for path in [ROOT / "scripts" / "app.py",
@@ -312,7 +318,7 @@ def test_new_solution_selects_the_first_plan_item_by_default():
 
 
 def test_plan_items_use_compact_structured_fields():
-    css = (ROOT / "app" / "app.css").read_text(encoding="utf-8")
+    css = CSS
     assert 'copy.className = "move-copy"' in SCRIPT
     assert 'title.className = "move-title"' in SCRIPT
     assert "phaseLabels" in SCRIPT and "resultLabels" in SCRIPT
@@ -320,7 +326,7 @@ def test_plan_items_use_compact_structured_fields():
 
 
 def test_solution_view_fades_or_hides_the_live_screenshot():
-    css = (ROOT / "app" / "app.css").read_text(encoding="utf-8")
+    css = CSS
     assert "background-dim .board-surface img" in css
     assert "background-hidden .board-surface img" in css
     assert "cycleSimulationBackground" in SCRIPT
@@ -328,7 +334,7 @@ def test_solution_view_fades_or_hides_the_live_screenshot():
 
 
 def test_active_sandbox_piece_uses_high_contrast_shared_color():
-    css = (ROOT / "app" / "app.css").read_text(encoding="utf-8")
+    css = CSS
     assert 'simulationSelectionColor = "#e11d48"' in SCRIPT
     assert "selected && simulation ? simulationSelectionColor" in SCRIPT
     assert 'ctx.arc(cx * sx, cy * sy, 15' in SCRIPT

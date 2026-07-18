@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>套住那只羊 · 求解器</title>
-  <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="css/desktop.css">
+  <link rel="stylesheet" href="css/shared.css">
+  <link rel="stylesheet" href="css/mobile.css">
 </head>
 <body>
   <header class="topbar">
@@ -457,6 +459,16 @@
   </dialog>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
+  <!-- 普通脚本按依赖顺序加载，共享同一全局词法作用域；main.js 负责绑定与启动 -->
+  <script src="js/core.js"></script>
+  <script src="js/mode.js"></script>
+  <script src="js/jobs.js"></script>
+  <script src="js/panels.js"></script>
+  <script src="js/board.js"></script>
+  <script src="js/quick_review.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/calibration.js"></script>
+  <script src="js/review_canvas.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
