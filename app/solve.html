@@ -383,7 +383,7 @@ function stepRow(step, index) {
   row.innerHTML = `<span class="n">${index + 1}</span>
     #${step.pieceId} ${ARROWS[step.direction]} ${
       step.result === "EXIT" ? "离场" : `${step.distance} 格`}
-    <span class="phase">${step.phase === "coarse" ? "直出" : "搜索"}</span>`;
+    <span class="phase">${step.phase === "coarse" ? "直出" : "关键"}</span>`;
   row.addEventListener("click", () => showStep(index));
   return row;
 }
