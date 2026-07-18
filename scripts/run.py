@@ -1,7 +1,7 @@
 """一键流水线：截图 -> 识别 -> 求解。
   py scripts/run.py            # 用现有 images/_game.png 跑 识别+求解
   py scripts/run.py --capture  # 先按窗口标题截图(需游戏在前台)，再识别+求解
-前置：grid_params.json 已用 app/grid_tuner.html 标定好四角(换关卡/换分辨率才需重标)。
+前置：data/grid_params.json 已在应用内「校准棋盘」标定好四角(换关卡/换分辨率才需重标)。
 """
 import argparse, cv2
 from paths import image_path

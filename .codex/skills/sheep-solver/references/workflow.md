@@ -4,7 +4,7 @@
 
 Keep source directories and hand-maintained configuration in the repo:
 
-- `app/index.html`, `app/grid_tuner.html`
+- `app/index.html`
 - `scripts/app.py`, `scripts/board_grid.py`, `scripts/detect_occupancy.py`, `scripts/board_io.py`
 - `scripts/solver.py`, `scripts/solver_search.py`, `scripts/solve_board.py`, `scripts/run.py`, `scripts/capture_window.py`
 - `tests/test_solver.py`, `README.md`
@@ -100,7 +100,7 @@ Get-CimInstance Win32_Process |
 
 If many sheep occupy wrong cells or the grid visibly drifts:
 
-1. Open `app/grid_tuner.html` or use the GUI calibration flow.
+1. Use the in-app calibration flow (采集 -> 校准).
 2. Adjust the four corners, not per-sheep offsets.
 3. Save `data/grid_params.json`.
 4. Rerun `python scripts/detect_occupancy.py`.
