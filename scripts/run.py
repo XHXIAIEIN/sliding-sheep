@@ -32,7 +32,7 @@ def main():
 
     print("== 3/3 求解 ==")
     import solve_board
-    solve_board.main("board.json")
+    solve_board.main()
 
 
 if __name__ == "__main__":

@@ -8,12 +8,12 @@ cache/
 artifacts/
 images/_*.png
 @AutomationLog.txt
-board.json
-board_grid.json
-board_layout.json
-scene_report.json
-sheep_candidates.json
-runtime_settings.json
+data/board.json
+data/board_grid.json
+data/board_layout.json
+data/scene_report.json
+data/sheep_candidates.json
+data/runtime_settings.json
 
 .venv/
 venv/

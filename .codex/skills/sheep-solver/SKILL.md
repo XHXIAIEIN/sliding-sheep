@@ -1,6 +1,6 @@
 ---
 name: sheep-solver
-description: Run, debug, and improve the local "套住那只羊" sheep puzzle solver. Use when working in or referring to the sheep-solver repo, capturing a game screenshot, calibrating grid_params.json, detecting sheep occupancy or facing direction, inspecting visual masks/overlays, generating board.json, solving the board, or fixing recognition mistakes such as wrong sheep direction, bad perspective grid, duplicate candidates, or cell conflicts.
+description: Run, debug, and improve the local "套住那只羊" sheep puzzle solver. Use when working in or referring to the sheep-solver repo, capturing a game screenshot, calibrating data/grid_params.json, detecting sheep occupancy or facing direction, inspecting visual masks/overlays, generating data/board.json, solving the board, or fixing recognition mistakes such as wrong sheep direction, bad perspective grid, duplicate candidates, or cell conflicts.
 ---
 
 # Sheep Solver
@@ -25,7 +25,7 @@ Work in the solver repo, usually `D:\Agent\tmp\auto-clicker\sheep-solver`.
    python scripts/detect_occupancy.py
    ```
    Expected outputs:
-   `board_grid.json`, `board.json`, `sheep_candidates.json`, `images/_occ_axis_rect.png`, `images/_grid_labels.png`.
+   `board_grid.json`, `data/board.json`, `sheep_candidates.json`, `images/_occ_axis_rect.png`, `images/_grid_labels.png`.
 
 4. Inspect the overlay before trusting the solver:
    - `images/_occ_axis_rect.png`: rectified board overlay, best for checking cell occupancy and facing.
@@ -34,18 +34,18 @@ Work in the solver repo, usually `D:\Agent\tmp\auto-clicker\sheep-solver`.
 
 5. Solve:
    ```powershell
-   python scripts/solve_board.py board.json
+   python scripts/solve_board.py
    ```
    `scripts/solve_board.py` draws the click order on `images/_occ_axis_rect.png` and writes `images/_solution.png`.
    For larger boards it uses weighted A* first, then beam search, then greedy fallback.
 
 ## Recognition Rules
 
-- Treat `grid_params.json` as the source of truth for perspective calibration. If the grid is offset, fix calibration before tuning masks.
+- Treat `data/grid_params.json` as the source of truth for perspective calibration. If the grid is offset, fix calibration before tuning masks.
 - The detector uses a rectified `rows x cols x 64px` board via `scripts/board_grid.py`; do not duplicate perspective math in ad hoc scripts.
 - Sheep are two-cell pieces. `cells[0]` is rump, `cells[1]` is head, and `facing` is `rump -> head`.
 - Head/tail is primarily a shape decision: the head is the pointier end with less white body mask and lower distance-transform radius. Warm face/ear pixels are only a weak tie-breaker because horns, ears, and feet can appear near the rump.
-- Prefer fixing `scripts/detect_occupancy.py` scoring or masks over hand-editing `board.json`; generated JSON should be reproducible.
+- Prefer fixing `scripts/detect_occupancy.py` scoring or masks over hand-editing `data/board.json`; generated JSON should be reproducible.
 
 ## Debugging
 
@@ -57,7 +57,7 @@ When direction is wrong:
 4. Adjust scoring in `scripts/detect_occupancy.py` so the rule generalizes, then rerun:
    ```powershell
    python scripts/detect_occupancy.py
-   python scripts/solve_board.py board.json
+   python scripts/solve_board.py
    ```
 
 When occupancy conflicts appear:
@@ -76,7 +76,7 @@ Run after detector or solver edits:
 python -m compileall -q scripts
 python -m pytest -q tests/test_solver.py
 python scripts/detect_occupancy.py
-python scripts/solve_board.py board.json
+python scripts/solve_board.py
 ```
 
 If `images/_game.png` is absent, run `python scripts/run.py --capture` first or ask for/provide a screenshot.

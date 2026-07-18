@@ -1026,14 +1026,14 @@ class ExecutionOps:
             self.sheep, debug = D.analyze(self.game, grid_model)
             self.debug = debug
             self._sync_species()
-            G.save_grid_data(grid_model, os.path.join(common.HERE, "board_grid.json"))
+            G.save_grid_data(grid_model, common.data_path("board_grid.json"))
             bd = D.to_board(self.sheep, rows, cols, hazards=debug.get("hazards"),
                             fences=debug.get("fences"))
             layout = D.to_layout(self.sheep, rows, cols, debug["dropped"],
                                  hazards=debug.get("hazards"), fences=debug.get("fences"))
-            json.dump(bd, open(os.path.join(common.HERE, "board.json"), "w", encoding="utf-8"),
+            json.dump(bd, open(common.data_path("board.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
-            json.dump(layout, open(os.path.join(common.HERE, "board_layout.json"), "w", encoding="utf-8"),
+            json.dump(layout, open(common.data_path("board_layout.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
             json.dump({"kept": self.sheep,
                        "hazards": debug.get("hazards", []),
@@ -1047,7 +1047,7 @@ class ExecutionOps:
                        "goat_wolf_environment": debug.get("goat_wolf_environment", []),
                        "dropped": debug["dropped"],
                        "raw": debug["candidates"]},
-                      open(os.path.join(common.HERE, "sheep_candidates.json"), "w", encoding="utf-8"),
+                      open(common.data_path("sheep_candidates.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
             cv2.imwrite(str(image_path("_occ_axis_rect.png")), D.render_rect_debug(debug, self.sheep))
             cv2.imwrite(str(image_path("_grid_labels.png")), D.render_grid_labels(debug, self.sheep))
@@ -1062,7 +1062,7 @@ class ExecutionOps:
                        "hazard_count": len(debug.get("hazards", []))},
             )
             self._last_cache = cache_meta
-            self.board = board_io.load(os.path.join(common.HERE, "board.json"))
+            self.board = board_io.load(common.data_path("board.json"))
             actual_state = self._snapshot(self.board, highlight=None)
             verification = self._verification_feedback(expected_state, actual_state, planned_steps)
             if verification:

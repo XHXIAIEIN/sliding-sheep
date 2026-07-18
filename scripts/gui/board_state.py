@@ -325,10 +325,10 @@ class BoardStateOps:
         if layout is not None:
             json.dumps(layout, ensure_ascii=False)
             json.dumps(candidates, ensure_ascii=False)
-        _write_json_atomic(os.path.join(common.HERE, "board.json"), bd)
+        _write_json_atomic(common.data_path("board.json"), bd)
         if layout is not None:
-            _write_json_atomic(os.path.join(common.HERE, "board_layout.json"), layout)
-            _write_json_atomic(os.path.join(common.HERE, "sheep_candidates.json"), candidates)
+            _write_json_atomic(common.data_path("board_layout.json"), layout)
+            _write_json_atomic(common.data_path("sheep_candidates.json"), candidates)
 
     def _rerender_detection_images(self):
         if not self.debug or self.sheep is None:

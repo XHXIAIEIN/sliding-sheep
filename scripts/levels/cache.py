@@ -19,6 +19,7 @@ CACHE_SCHEMA = 2
 SOLUTION_SCHEMA = 2
 SOLVER_VERSION = "2026.07-wolf-no-stop-v3"
 EXECUTION_SCHEMA = 1
+# 缓存条目内的相对文件名；历史缓存依赖这套扁平命名，不能随根目录布局变化。
 ARTIFACTS = [
     "board.json",
     "board_layout.json",
@@ -30,6 +31,13 @@ ARTIFACTS = [
     "images/_grid_labels.png",
     "images/_layout.png",
 ]
+# 这些产物当前在项目根的 data/ 下生成。
+DATA_ARTIFACTS = frozenset(name for name in ARTIFACTS if name.endswith(".json"))
+
+
+def artifact_source(rel: str):
+    """Current on-disk location of one artifact, keyed by its cache-relative name."""
+    return (ROOT / "data" / rel) if rel in DATA_ARTIFACTS else (ROOT / rel)
 
 _CAPTURE_LOCK = threading.RLock()
 
@@ -355,7 +363,7 @@ def _save_capture_unlocked(board_data: dict, *, level_key: str | None = None,
 
     copied = []
     for rel in ARTIFACTS:
-        src = ROOT / rel
+        src = artifact_source(rel)
         if not src.exists():
             continue
         dst = staging_dir / rel

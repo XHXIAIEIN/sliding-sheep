@@ -476,7 +476,7 @@ class EditorOps:
             _write_json_atomic(os.path.join(folder, "detected_sheep.json"),
                                self._detected_sheep_data or [])
 
-            params_path = os.path.join(common.HERE, "grid_params.json")
+            params_path = common.data_path("grid_params.json")
             params = json.load(open(params_path, encoding="utf-8")) if os.path.exists(params_path) else {}
             grid_hash = hashlib.sha1(json.dumps(
                 params, ensure_ascii=False, sort_keys=True,

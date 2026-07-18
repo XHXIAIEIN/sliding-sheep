@@ -11,7 +11,9 @@ from levels import cache as level_cache
 from core import safety
 from board import io as board_io
 import recognition
-from paths import image_path
+from paths import (BOARD_GRID_JSON, BOARD_JSON, BOARD_LAYOUT_JSON,
+                   GRID_PARAMS_JSON, SCENE_REPORT_JSON,
+                   SHEEP_CANDIDATES_JSON, image_path)
 from .conflicts import (apply_species_anchors, reject_departing_edge_pieces,
                         reject_hazard_piece_overlaps, reject_internal_fence_overlaps,
                         reject_partial_exit_candidates, resolve_candidates,
@@ -250,8 +252,8 @@ def detect(game, corners, rows, cols):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--image", default=str(image_path("_game.png")))
-    ap.add_argument("--params", default="grid_params.json")
-    ap.add_argument("--board", default="board.json")
+    ap.add_argument("--params", default=str(GRID_PARAMS_JSON))
+    ap.add_argument("--board", default=str(BOARD_JSON))
     args = ap.parse_args(argv)
 
     game = cv2.imread(args.image)
@@ -259,7 +261,7 @@ def main(argv=None):
         raise SystemExit(f"读不到图片: {args.image}")
     _remove_obsolete_images()
     grid = G.load_grid(args.params, game)
-    G.save_grid_data(grid, "board_grid.json")
+    G.save_grid_data(grid, BOARD_GRID_JSON)
 
     sheep, debug = analyze(game, grid)
     occ, conflicts = _conflicts(sheep)
@@ -293,8 +295,8 @@ def main(argv=None):
         report = safety.add_blockers(report, [
             safety.blocker("board_schema_invalid", "棋盘结构校验失败", detail=exc.errors)
         ])
-    _write_json("scene_report.json", report)
-    _write_json("sheep_candidates.json", {
+    _write_json(SCENE_REPORT_JSON, report)
+    _write_json(SHEEP_CANDIDATES_JSON, {
         "scene_state": report["scene_state"],
         "scene_reason": report["scene_reason"],
         "execution_blockers": report["execution_blockers"],
@@ -321,7 +323,7 @@ def main(argv=None):
     cv2.imwrite(str(image_path("_grid_labels.png")), render_grid_labels(debug, sheep))
     cv2.imwrite(str(image_path("_layout.png")), render_layout(debug, sheep))
     if report["scene_state"] != "gameplay":
-        for stale in (Path(args.board), Path("board_layout.json")):
+        for stale in (Path(args.board), BOARD_LAYOUT_JSON):
             if stale.exists():
                 stale.unlink()
         print(f"场景 {report['scene_state']}：{report['scene_reason']}")
@@ -329,7 +331,7 @@ def main(argv=None):
         raise SystemExit(2)
 
     _write_json(args.board, board_data)
-    _write_json("board_layout.json", layout_data)
+    _write_json(BOARD_LAYOUT_JSON, layout_data)
     cache_meta = level_cache.save_capture(
         board_data,
         source="cli-detect",
@@ -338,5 +340,5 @@ def main(argv=None):
                "scene_state": report["scene_state"], "executable": report["executable"],
                "execution_blockers": [item["code"] for item in report["execution_blockers"]]},
     )
-    print("saved board.json / board_layout.json / sheep_candidates.json / images/_occ_axis_rect.png / images/_grid_labels.png / images/_layout.png")
+    print("saved data/board.json data/board_layout.json data/sheep_candidates.json images/_occ_axis_rect.png images/_grid_labels.png images/_layout.png")
     print(f"cache {cache_meta['capture_id']} -> cache/levels/{cache_meta['level_key']}")

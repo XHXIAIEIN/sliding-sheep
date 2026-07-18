@@ -16,7 +16,7 @@ class CalibrationOps:
     def load_params(self):
         """启动/重置时读当前目录的 grid_params.json（没有则返回 None）。"""
         def run():
-            p = os.path.join(common.HERE, "grid_params.json")
+            p = common.data_path("grid_params.json")
             if not os.path.exists(p):
                 return {"params": None}
             return {"params": json.load(open(p, encoding="utf-8"))}
@@ -93,7 +93,7 @@ class CalibrationOps:
             blockers, _warnings = safety.validate_calibration(P, self.game.shape if self.game is not None else (h, w, 3))
             if blockers:
                 raise RuntimeError("；".join(item["message"] for item in blockers))
-            json.dump(P, open(os.path.join(common.HERE, "grid_params.json"), "w", encoding="utf-8"),
+            json.dump(P, open(common.data_path("grid_params.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=1)
             self._frame_history.clear()
             return {"saved": True}
@@ -154,7 +154,7 @@ class CalibrationOps:
                 raise RuntimeError("请先截图")
             h, w = self.game.shape[:2]
             centers = [[int(x), int(y)] for x, y in self._sheep_centers()]
-            p = os.path.join(common.HERE, "grid_params.json")
+            p = common.data_path("grid_params.json")
             if os.path.exists(p):
                 P = json.load(open(p, encoding="utf-8"))
                 cor, ow, oh = P.get("corners"), P.get("imgW"), P.get("imgH")

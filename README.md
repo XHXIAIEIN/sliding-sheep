@@ -42,7 +42,7 @@ python scripts/app.py
 
 ```powershell
 python scripts/detect_occupancy.py
-python scripts/solve_board.py board.json
+python scripts/solve_board.py
 ```
 
 先捕获游戏窗口：
@@ -101,6 +101,7 @@ scripts/
   core/                  核心层：runtime / safety / analysis / capture
   tools/                 独立维护工具：cache_admin / recognition_regression
 tests/                   pytest 测试与 conftest（负责 scripts/ 导入路径）
+data/                    运行产物与持久配置（路径常量集中在 scripts/paths.py）
 app/
   index.html             双模式语义结构
   js/                    按加载顺序拆分：core → mode → jobs → panels → board →
@@ -131,8 +132,8 @@ app/
 - 任一 `execution_blocker` 都会阻止点击。
 - `manual_learning_confirmation_required`（单样本学习候选）仍是硬阻断，不能靠连续观察自动放行。
 - 求解策略学习与识别安全门禁完全分离：它只静默调整后续搜索顺序和时间配比，不弹提示、不要求确认、不会授权或阻止点击。
-- `hard_refresh` 清理当前截图、棋盘和诊断产物，但保留 `grid_params.json`、识别学习和历史缓存。
-- 校准数据由 `grid_params.json` 持久保存；透视计算只存在于 `board/grid.py`。
+- `hard_refresh` 清理当前截图、棋盘和诊断产物，但保留 `data/grid_params.json`、识别学习和历史缓存。
+- 校准数据由 `data/grid_params.json` 持久保存；透视计算只存在于 `board/grid.py`。
 
 ## 人工复核
 
@@ -183,10 +184,10 @@ python -m compileall -q scripts
 Get-ChildItem app/js -Filter *.js | ForEach-Object { node --check $_.FullName }
 python -m pytest -q
 python scripts/detect_occupancy.py
-python scripts/solve_board.py board.json
+python scripts/solve_board.py
 ```
 
-识别可信度应以 `images/_occ_axis_rect.png`、`images/_grid_labels.png`、`sheep_candidates.json` 和 `scene_report.json` 为准。求解成功不代表识别一定正确；执行许可始终由安全报告决定。
+识别可信度应以 `images/_occ_axis_rect.png`、`images/_grid_labels.png`、`data/sheep_candidates.json` 和 `data/scene_report.json` 为准。求解成功不代表识别一定正确；执行许可始终由安全报告决定。
 
 ## 依赖
 

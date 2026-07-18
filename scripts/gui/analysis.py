@@ -143,7 +143,7 @@ class AnalysisOps:
         previous_plan = self._active_plan
         previous_Minv = self.Minv.copy() if self.Minv is not None else None
         previous_sheep = deepcopy(self.sheep)
-        params_path = os.path.join(common.HERE, "grid_params.json")
+        params_path = common.data_path("grid_params.json")
         bundle = analysis_engine.analyze_image(
             self.game,
             analysis_engine.load_params(params_path),
@@ -163,7 +163,7 @@ class AnalysisOps:
         self.rows, self.cols = rows, cols
         self.Minv = grid_model.inverse_matrix
         D._remove_obsolete_images()
-        G.save_grid_data(grid_model, os.path.join(common.HERE, "board_grid.json"))
+        G.save_grid_data(grid_model, common.data_path("board_grid.json"))
         self.sheep, debug = bundle.sheep, bundle.debug
         runtime_confirmed = self._confirm_stable_runtime_reviews(
             self.sheep, self._frame_history)
@@ -195,9 +195,9 @@ class AnalysisOps:
         candidates = analysis_engine.audit_payload(
             bundle, runtime_confirmed_reviews=runtime_confirmed)
         if persist:
-            json.dump(candidates, open(os.path.join(common.HERE, "sheep_candidates.json"), "w", encoding="utf-8"),
+            json.dump(candidates, open(common.data_path("sheep_candidates.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
-            json.dump(report, open(os.path.join(common.HERE, "scene_report.json"), "w", encoding="utf-8"),
+            json.dump(report, open(common.data_path("scene_report.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
             cv2.imwrite(str(image_path("_occ_axis_rect.png")), D.render_rect_debug(debug, self.sheep))
             cv2.imwrite(str(image_path("_grid_labels.png")), D.render_grid_labels(debug, self.sheep))
@@ -218,7 +218,7 @@ class AnalysisOps:
                     report, previous_board, previous_Minv, previous_sheep)
                 self._active_plan = previous_plan
                 if persist:
-                    json.dump(restored, open(os.path.join(common.HERE, "scene_report.json"), "w", encoding="utf-8"),
+                    json.dump(restored, open(common.data_path("scene_report.json"), "w", encoding="utf-8"),
                               ensure_ascii=False, indent=2)
                 return {
                     "grid": self._grid_lines(rows, cols), "rows": rows, "cols": cols,
@@ -235,7 +235,7 @@ class AnalysisOps:
             self.board_revision = None
             self._active_plan = None
             for stale in ("board.json", "board_layout.json"):
-                path = os.path.join(common.HERE, stale)
+                path = common.data_path(stale)
                 if os.path.exists(path):
                     os.remove(path)
             return {"grid": self._grid_lines(rows, cols), "rows": rows, "cols": cols,
@@ -244,13 +244,13 @@ class AnalysisOps:
                     "state": None, **report}
 
         if persist:
-            json.dump(bd, open(os.path.join(common.HERE, "board.json"), "w", encoding="utf-8"),
+            json.dump(bd, open(common.data_path("board.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
-            json.dump(layout, open(os.path.join(common.HERE, "board_layout.json"), "w", encoding="utf-8"),
+            json.dump(layout, open(common.data_path("board_layout.json"), "w", encoding="utf-8"),
                       ensure_ascii=False, indent=2)
         try:
             board_io.validate_board_data(bd)
-            self.board = board_io.load(os.path.join(common.HERE, "board.json")) if persist else board_io.Board(
+            self.board = board_io.load(common.data_path("board.json")) if persist else board_io.Board(
                 rows=bd["rows"], cols=bd["cols"], pieces=bd["pieces"], model=bd["model"],
                 slide_mode=bd["slide_mode"], hazards=bd.get("hazards", []),
                 fences=bd.get("fences", []), no_stop=bd.get("no_stop", []))

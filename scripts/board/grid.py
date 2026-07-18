@@ -16,6 +16,8 @@ from pathlib import Path
 import cv2
 import numpy as np
 
+from paths import BOARD_GRID_JSON, GRID_PARAMS_JSON
+
 CELL = 64
 CORNER_KEYS = ("TL", "TR", "BR", "BL")
 
@@ -123,7 +125,7 @@ def _scaled_corners(params: dict, image_shape) -> dict[str, list[float]]:
     return {k: [float(corners[k][0]), float(corners[k][1])] for k in CORNER_KEYS}
 
 
-def load_params(path: str | Path = "grid_params.json") -> dict:
+def load_params(path: str | Path = GRID_PARAMS_JSON) -> dict:
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -142,10 +144,10 @@ def from_params(params: dict, image_shape=None, cell: int = CELL) -> BoardGrid:
     )
 
 
-def load_grid(params_path: str | Path = "grid_params.json", image: np.ndarray | None = None) -> BoardGrid:
+def load_grid(params_path: str | Path = GRID_PARAMS_JSON, image: np.ndarray | None = None) -> BoardGrid:
     return from_params(load_params(params_path), None if image is None else image.shape)
 
 
-def save_grid_data(grid: BoardGrid, path: str | Path = "board_grid.json") -> None:
+def save_grid_data(grid: BoardGrid, path: str | Path = BOARD_GRID_JSON) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(grid.to_json(), f, ensure_ascii=False, indent=2)

@@ -186,7 +186,7 @@ def test_cached_popup_is_blocked():
     if not popup.exists():
         return
     image = cv2.imread(str(popup))
-    grid = G.load_grid(str(ROOT / "grid_params.json"), image)
+    grid = G.load_grid(str(ROOT / "data" / "grid_params.json"), image)
     sheep, debug = D.analyze(image, grid)
     layout = D.to_layout(sheep, grid.rows, grid.cols, debug["dropped"], hazards=debug.get("hazards"))
     report = safety.classify_scene(image, debug, sheep, grid.rows, grid.cols, layout=layout)

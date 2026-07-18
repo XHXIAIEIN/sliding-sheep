@@ -9,7 +9,7 @@ from levels import cache as level_cache
 from solver import planner
 from solver import Move
 import vision as D
-from paths import image_path
+from paths import BOARD_JSON, image_path
 
 
 def _draw_step_badge(img, center, text):
@@ -84,7 +84,7 @@ def _records_to_moves(board, records):
 
 
 def main(path=None):
-    path = path or (sys.argv[1] if len(sys.argv) > 1 else "board.json")
+    path = path or (sys.argv[1] if len(sys.argv) > 1 else str(BOARD_JSON))
     board = board_io.load(path)
     board_data = _board_data(board)
     n = board.remaining_count()

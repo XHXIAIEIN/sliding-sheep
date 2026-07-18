@@ -44,7 +44,8 @@ class SettingsOps:
             removed = []
             current_artifacts = tuple(level_cache.ARTIFACTS) + ("images/_solution.png",)
             for relative in current_artifacts:
-                path = os.path.join(common.HERE, relative)
+                path = (common.data_path(relative) if relative in level_cache.DATA_ARTIFACTS
+                        else os.path.join(common.HERE, relative))
                 if os.path.exists(path):
                     os.remove(path)
                     removed.append(relative.replace("\\", "/"))

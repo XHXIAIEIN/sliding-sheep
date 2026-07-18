@@ -21,7 +21,7 @@ import cv2
 from board import grid as G
 import vision as D
 from core import safety
-from paths import ROOT
+from paths import GRID_PARAMS_JSON, ROOT
 
 
 def _signature_from_board(data):
@@ -115,7 +115,7 @@ def _run_one(args):
 def main(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument("--cache", default=str(ROOT / "cache" / "levels"))
-    parser.add_argument("--params", default=str(ROOT / "grid_params.json"))
+    parser.add_argument("--params", default=str(GRID_PARAMS_JSON))
     parser.add_argument("--output", default=str(ROOT / "cache" / "recognition_regression.json"))
     parser.add_argument("--workers", type=int, default=4)
     parser.add_argument("--limit", type=int, default=0)

@@ -17,8 +17,8 @@ DESKTOP_WINDOW_SIZE = (1320, 900)
 REFERENCE_WINDOW_SIZE = (460, 900)
 MIN_WINDOW_SIZE = (390, 640)
 LOG_DIR = os.path.join(HERE, "logs")
-RETRY_CONTROLS_PATH = os.path.join(HERE, "retry_controls.json")
-RUNTIME_SETTINGS_PATH = os.path.join(HERE, "runtime_settings.json")
+RETRY_CONTROLS_PATH = os.path.join(HERE, "data", "retry_controls.json")
+RUNTIME_SETTINGS_PATH = os.path.join(HERE, "data", "runtime_settings.json")
 DEFAULT_RUNTIME_SETTINGS = {
     "solve_timeout_s": 10,
     "timeout_extension_s": 5,
@@ -47,6 +47,13 @@ HOTKEYS = {
 }
 
 
+def data_path(name):
+    """Path of a runtime artifact under <HERE>/data, honouring HERE redirection."""
+    folder = os.path.join(HERE, "data")
+    os.makedirs(folder, exist_ok=True)
+    return os.path.join(folder, name)
+
+
 class ExecutionReviewRequired(RuntimeError):
     """A planned click needs a human-facing, precisely located review marker."""
 
@@ -71,6 +78,9 @@ class ExecutionReviewRequired(RuntimeError):
 
 def _write_json_atomic(path, data):
     """Serialize completely before replacing a JSON artifact."""
+    parent = os.path.dirname(path)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
     tmp = f"{path}.tmp-{os.getpid()}-{threading.get_ident()}"
     try:
         with open(tmp, "w", encoding="utf-8") as stream:
@@ -133,7 +143,7 @@ def _read_runtime_settings():
 
 
 def _load_params():
-    P = json.load(open(os.path.join(HERE, "grid_params.json"), encoding="utf-8"))
+    P = json.load(open(data_path("grid_params.json"), encoding="utf-8"))
     return (P["corners"], int(P["rows"]), int(P["cols"]),
             int(P.get("imgW", 0)), int(P.get("imgH", 0)))
 

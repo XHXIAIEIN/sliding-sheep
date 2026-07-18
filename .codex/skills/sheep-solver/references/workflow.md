@@ -8,13 +8,13 @@ Keep source directories and hand-maintained configuration in the repo:
 - `scripts/app.py`, `scripts/board_grid.py`, `scripts/detect_occupancy.py`, `scripts/board_io.py`
 - `scripts/solver.py`, `scripts/solver_search.py`, `scripts/solve_board.py`, `scripts/run.py`, `scripts/capture_window.py`
 - `tests/test_solver.py`, `README.md`
-- `grid_params.json`
+- `data/grid_params.json`
 - `reference/`
 
 Generated files may be moved to `.trash` when cleaning:
 
 - `images/_game.png`
-- `board.json`
+- `data/board.json`
 - `board_grid.json`
 - `sheep_candidates.json`
 - `images/_occ_axis_rect.png`
@@ -28,7 +28,7 @@ Use current screenshot:
 
 ```powershell
 python scripts/detect_occupancy.py
-python scripts/solve_board.py board.json
+python scripts/solve_board.py
 ```
 
 Capture then solve:
@@ -56,7 +56,7 @@ Get-CimInstance Win32_Process |
 
 `scripts/board_grid.py` owns perspective mapping:
 
-- Load `grid_params.json`.
+- Load `data/grid_params.json`.
 - Scale corners when screenshot size differs from calibration size.
 - Warp the source image into rectified board pixels.
 - Export `board_grid.json` for cell center and polygon audit data.
@@ -68,7 +68,7 @@ Get-CimInstance Win32_Process |
 - Use distance-transform peaks as watershed seeds.
 - Score each segmented region against adjacent two-cell candidates.
 - Resolve duplicates and overlaps.
-- Emit a solver-compatible `board.json`.
+- Emit a solver-compatible `data/board.json`.
 
 `scripts/solver_search.py` owns large-board search:
 
@@ -79,7 +79,7 @@ Get-CimInstance Win32_Process |
 
 `scripts/solve_board.py` owns solving:
 
-- Load `board.json`.
+- Load `data/board.json`.
 - Use A* for small boards and `solver_search.search_solve()` for larger boards.
 - Draw click order on `images/_occ_axis_rect.png` and emit `images/_solution.png`.
 
@@ -102,7 +102,7 @@ If many sheep occupy wrong cells or the grid visibly drifts:
 
 1. Open `app/grid_tuner.html` or use the GUI calibration flow.
 2. Adjust the four corners, not per-sheep offsets.
-3. Save `grid_params.json`.
+3. Save `data/grid_params.json`.
 4. Rerun `python scripts/detect_occupancy.py`.
 5. Verify `images/_occ_axis_rect.png` before solving.
 

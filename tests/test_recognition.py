@@ -70,7 +70,7 @@ def level113_manual_fixture():
     image = cv2.imread(str(image_path))
     if image is None:
         return None
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     manual = json.loads(board_path.read_text(encoding="utf-8"))
     return image, grid, manual
 
@@ -285,7 +285,7 @@ def test_archived_bomb_counter_rejects_learned_rocket_proposal():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     assert not [piece for piece in pieces
                 if piece.get("species") == "rocket" and piece.get("learned_template")
@@ -790,7 +790,7 @@ def test_level99_bomb_counters_read_one_two_three():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     markers, _mask = D.bomb_markers(grid.warp(image), grid.rows, grid.cols)
     values = {tuple(item["cell"]): item["hits_remaining"] for item in markers}
     assert values[(3, 7)] == 1, markers
@@ -805,7 +805,7 @@ def test_level100_elephants_are_2x3_and_boundary_fences_are_detected():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     rect = grid.warp(image)
     elephants, _mask, _meta = D.elephant_pieces(rect, grid.rows, grid.cols)
     footprints = {(tuple(map(tuple, item["cells"])), item["facing"]) for item in elephants}
@@ -952,7 +952,7 @@ def test_level116_internal_fence_replaces_false_cattle_candidates():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     internal = {(tuple(item["cell"]), item["direction"])
                 for item in debug["fences"] if item["direction"] in {"H", "V"}}
@@ -1003,7 +1003,7 @@ def test_archived_level102_black_sheep_is_not_restored_as_wolf_hazards():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     black = [item for item in pieces if item.get("species") == "black_sheep"]
     assert len(black) == 1, black
@@ -1020,7 +1020,7 @@ def test_archived_level102_real_wolf_stays_a_hazard():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     assert not [item for item in pieces if item.get("species") == "black_sheep"], pieces
     assert {(item["row"], item["col"]) for item in debug["hazards"]} == {(3, 6), (4, 6)}
@@ -1067,7 +1067,7 @@ def test_level121_border_wolf_does_not_create_full_column_track():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     _pieces, debug = D.analyze(image, grid)
     hazards = list(debug["hazards"])
     assert not [item for item in hazards if item.get("kind") == "wolf_track"], hazards
@@ -1096,7 +1096,7 @@ def test_level103_recovers_exactly_four_black_sheep():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     black = {
         (tuple(map(tuple, item["cells"])), item["facing"])
@@ -1122,7 +1122,7 @@ def test_level109_recovers_exactly_two_pink_sheep():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     pink = {
         (tuple(map(tuple, item["cells"])), item["facing"])
@@ -1144,7 +1144,7 @@ def test_level112_recovers_three_sleeping_and_one_awake_pig():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     pigs = {
         (tuple(map(tuple, item["cells"])), item["facing"]): bool(item.get("awake"))
@@ -1168,7 +1168,7 @@ def test_level113_recovers_top_and_bottom_goats():
     if not image_path.exists():
         return
     image = cv2.imread(str(image_path))
-    grid = G.load_grid(str(root / "grid_params.json"), image)
+    grid = G.load_grid(str(root / "data" / "grid_params.json"), image)
     pieces, debug = D.analyze(image, grid)
     goats = {
         (tuple(map(tuple, item["cells"])), item["facing"])
